@@ -1,0 +1,15 @@
+p {
+    text-align: justify
+  }
+
+.sidebar{
+    li{
+        margin-left:8px;
+    }
+}
+
+table{
+    tbody{
+        font-size: smaller;
+    }
+}
