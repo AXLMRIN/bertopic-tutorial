@@ -199,8 +199,8 @@ window.Quarto = {
   <li><a href="#hierarchical-graphs" id="toc-hierarchical-graphs" class="nav-link" data-scroll-target="#hierarchical-graphs">Hierarchical graphs</a></li>
   <li><a href="#additional-visualisations" id="toc-additional-visualisations" class="nav-link" data-scroll-target="#additional-visualisations">Additional visualisations</a></li>
   </ul></li>
-  <li><a href="#aggregate-topics" id="toc-aggregate-topics" class="nav-link" data-scroll-target="#aggregate-topics">Aggregate topics</a></li>
-  <li><a href="#tune-parameters" id="toc-tune-parameters" class="nav-link" data-scroll-target="#tune-parameters">Tune parameters</a></li>
+  <li><a href="#sec-aggregate-topics" id="toc-sec-aggregate-topics" class="nav-link" data-scroll-target="#sec-aggregate-topics">Aggregate topics</a></li>
+  <li><a href="#sec-tune-parameters" id="toc-sec-tune-parameters" class="nav-link" data-scroll-target="#sec-tune-parameters">Tune parameters</a></li>
   <li><a href="#discussion-on-evaluating-a-topic-model" id="toc-discussion-on-evaluating-a-topic-model" class="nav-link" data-scroll-target="#discussion-on-evaluating-a-topic-model">Discussion on evaluating a topic model</a>
   <ul class="collapse">
   <li><a href="#qualitative-evaluation" id="toc-qualitative-evaluation" class="nav-link" data-scroll-target="#qualitative-evaluation">Qualitative evaluation</a></li>
@@ -1009,8 +1009,8 @@ Figure&nbsp;8: <strong>XXX</strong>
 </div>
 </section>
 </section>
-<section id="aggregate-topics" class="level2">
-<h2 class="anchored" data-anchor-id="aggregate-topics">Aggregate topics</h2>
+<section id="sec-aggregate-topics" class="level2">
+<h2 class="anchored" data-anchor-id="sec-aggregate-topics">Aggregate topics</h2>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1031,7 +1031,7 @@ Warning
 <p>😬 &lt;- me, ie lost</p>
 </div>
 </div>
-<p>In the previous section we introduced the idea that the clustering was hierarchical, meaning that we can easily aggregate small clusters into bigger ones. <strong>Du coup askip, non c’est pas l’idée</strong> <br> In our case, with more than 100 topics, it is difficult to have a general idea of the main latent themes in the corpus. Looking back to the <a href="#fig-hierarchical-plot" class="quarto-xref">Figure&nbsp;6</a> we can identify seven large branches we could reduce our topic model to.</p>
+<p>In our case, with more than 100 topics, it is difficult to have a general idea of the main latent themes in the corpus. Looking back to the <a href="#fig-hierarchical-plot" class="quarto-xref">Figure&nbsp;6</a> we can identify seven large branches we could reduce our topic model to.</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>topic_model.reduce_topics(docs <span class="op">=</span> docs, nr_topics<span class="op">=</span><span class="dv">7</span> <span class="op">+</span> <span class="dv">1</span>) <span class="co">#Add one to account for the noise</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Retrieve the updated topics and probabilities</span></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>topics_reduced, probabilities_reduced <span class="op">=</span> topic_model.topics_, topic_model.probabilities_</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1183,14 +1183,14 @@ Warning
 </div>
 </div>
 </section>
-<section id="tune-parameters" class="level2">
-<h2 class="anchored" data-anchor-id="tune-parameters">Tune parameters</h2>
-<p>In this section we try to build a consistant and robust road map for tuning your topic model. The code and extra figures are provided in the techy-notes.</p>
-<p><strong>Assess the quality of the embedding space</strong> (parameters tuned: embedding model)</p>
-<p>The first step is to choose the embedding model as it drastically alters the results of the topic model. To do this, you can embed your documents and plot the 2D map after dimension reduction with UMAP and <code>n_components=2</code>. Then, by exploring the map, you can assess if the embedding space created places similar documents together or not.</p>
+<section id="sec-tune-parameters" class="level2">
+<h2 class="anchored" data-anchor-id="sec-tune-parameters">Tune parameters</h2>
+<p>In this section, we propose to tune the 3 main parameters outlined by research papers and confirmed by our experience: the embedding model, <code>n_neighbors</code> (UMAP) and <code>n_components</code> (HDBSCAN). A table can be found in the <a href="./techy-notes.html#umap-and-hdbscan-parameter-despcription">techy notes</a> providing descriptions for other parameters.</p>
+<p><strong>1.Assess the quality of the embedding space</strong> (parameters tuned: embedding model)</p>
+<p>The first step is to choose the embedding model as it drastically alters the results of the topic model. To do this, you can embed your documents and plot the 2D map after dimension reduction with UMAP and <code>n_components=2</code>. Then, by exploring the map, you can assess if the embedding space created placed similar documents together or not.</p>
 <p>At this point you can also try different values for <code>n_neighbors</code> and <code>n_components</code>. However, be aware that the influence of UMAP parameters on the final topic model is difficult to appreciate at first glance.</p>
 <p><strong>Tune the granularity of the topic model</strong> (parameters tuned: <code>n_neighbors</code> and <code>min_cluster_size</code>)</p>
-<p>Once you’ve chose the embedding model to use, you can change the <code>n_neighbors</code> and <code>min_cluster_size</code>. Both work</p>
+<p>Once you’ve chose the embedding model to use, you can change the <code>n_neighbors</code> and <code>min_cluster_size</code>. Both work jointly: the lower these paramters, the smaller grain and more specific the topics.</p>
 <p>To change these parameters, one must create <code>UMAP</code> and <code>HDBSCAN</code> instances and pass them on to the <code>BERTopic</code> model:</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load data and create the vectorizer model like before</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>language <span class="op">=</span> <span class="st">"english"</span> <span class="co"># or "french"</span></span>
@@ -1291,7 +1291,67 @@ Figure&nbsp;9: <strong>XXX</strong>
 <p>In short: quantitative methods are impractical and one should focus more on the qualitative evaluation.</p>
 <section id="qualitative-evaluation" class="level3">
 <h3 class="anchored" data-anchor-id="qualitative-evaluation">Qualitative evaluation</h3>
-<p>There is no one way around qualitatively evaluate your BERTopic, however the point is <!-- find reference? --></p>
+<p>All along the tutorial, we have displayed many results and analysed them with the objective to answer the very question: is the topic model coherent? There is no one way around qualitatively evaluating your BERTopic, however the point is to offer some techniques we found useful and code snippet to quickly obtain key insights on your topic model performance.</p>
+<p><strong>Explore the 2D map</strong></p>
+<p>As depicted in <a href="#sec-tune-parameters" class="quarto-xref">Section&nbsp;3.6</a>, exploring the 2D map is a good way to explore the embedding space and tell if groups are made out of similar documents. It’s even better if you have additional tags that can make the exploration even faster.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Explore the merging process</strong></p>
+<p>When merging topics at <a href="#sec-aggregate-topics" class="quarto-xref">Section&nbsp;3.5</a> we may want to monitor what’s going where. The following snippet prints out the topics that were merged into them:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> iRow_reduced, topic_id <span class="kw">in</span> <span class="bu">enumerate</span>(topic_info_reduced[<span class="st">"Topic"</span>]):</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(topic_info_reduced.loc[iRow_reduced, <span class="st">"Name"</span>].replace(<span class="st">"_"</span>, <span class="st">" "</span>))</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    og_topics_merged_to_new_topic <span class="op">=</span> <span class="bu">list</span>(<span class="bu">set</span>([</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>        <span class="bu">int</span>(og_topic) </span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> og_topic, new_topic <span class="kw">in</span> <span class="bu">zip</span>(topics, topics_reduced) </span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> new_topic <span class="op">==</span> topic_id</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    ]))</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> og_topic <span class="kw">in</span> og_topics_merged_to_new_topic:</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>            <span class="st">"</span><span class="ch">\t</span><span class="st"> - "</span>,</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>            topic_info.loc[</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>                topic_info[<span class="st">"Topic"</span>] <span class="op">==</span> og_topic,</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Name"</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>            ]</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>            .item()</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>            .replace(<span class="st">"_"</span>, <span class="st">" "</span>)</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>        ) </span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"---"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> ...</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> 5 <span class="ex">law</span> legal international rights</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span>  -  <span class="ex">66</span> monetary policy inflation exchange</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span>  -  <span class="ex">70</span> contract law contractual subsidy</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span>  -  <span class="ex">46</span> constitutional judge legal council</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span>  -  <span class="ex">22</span> international law european rights</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span>  -  <span class="ex">89</span> financial law tax transactions</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span>  -  <span class="ex">58</span> financial economic banks growth</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In this example we can confidently assess that the merge is coherent as it groups all law related topics into one.</p>
+<p><strong>Explore the reason why a given document was clustered in a specific group</strong></p>
+<p>In our example, we have</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>OAI_REFS <span class="op">=</span> pd.read_csv(<span class="st">"./data/oai_codes.csv"</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>DS <span class="op">=</span> ds</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_docs_for_oai_code(oai_code : <span class="bu">str</span>):</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>: </span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>        oai_name <span class="op">=</span> OAI_REFS.loc[OAI_REFS[<span class="st">"code"</span>] <span class="op">==</span> oai_code, <span class="st">"name"</span>].item()</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> <span class="pp">Exception</span>:</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"oai code </span><span class="sc">{</span>oai_code<span class="sc">}</span><span class="ss"> invalid"</span>)</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> return_name(codes):</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> oai_code <span class="kw">in</span> codes: <span class="cf">return</span> oai_name</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>: <span class="cf">return</span> <span class="st">"Autre"</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>    classes <span class="op">=</span> [return_name(codes) <span class="cf">for</span> codes <span class="kw">in</span> ds[<span class="st">"oai_set_specs"</span>]]</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>    topics_per_class <span class="op">=</span> topic_model.topics_per_class(docs, classes <span class="op">=</span> classes)</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>    topics_per_class <span class="op">=</span> topics_per_class.loc[topics_per_class[<span class="st">"Class"</span>] <span class="op">==</span> oai_name, :].set_index(<span class="st">"Topic"</span>)</span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>    topics_name <span class="op">=</span> (</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>        topic_model</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>        .get_topic_info()</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>        .set_index(<span class="st">"Topic"</span>)</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>        [<span class="st">"Name"</span>]</span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>    topics_per_class.loc[:,<span class="st">"Topic Name"</span>] <span class="op">=</span> topics_name</span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> topics_per_class.loc[topics_per_class[<span class="st">"Class"</span>] <span class="op">==</span> oai_name, :]</span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>get_docs_for_oai_code(<span class="st">"ddc:000"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="quantitative-evaluation" class="level3">
 <h3 class="anchored" data-anchor-id="quantitative-evaluation">Quantitative evaluation</h3>
@@ -1313,9 +1373,9 @@ Figure&nbsp;9: <strong>XXX</strong>
 <section id="precompute-your-embeddings" class="level2">
 <h2 class="anchored" data-anchor-id="precompute-your-embeddings">Precompute your embeddings</h2>
 <p>Pre-computing the embeddings is a good practice as it will prevent from computing them at each run, but also because it allows you to use a broader spectrum of embedding models that could ne necessarily be used with BERTopic<a href="#fn15" class="footnote-ref" id="fnref15" role="doc-noteref"><sup>15</sup></a>. We retrieve the embeddings and the documents</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>ds <span class="op">=</span> load_from_disk(<span class="st">"path/to/file"</span>)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>docs <span class="op">=</span> np.array(ds[<span class="ss">f"resumes.en"</span>]) <span class="co"># Number of documents : 6500</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>embeddings <span class="op">=</span> np.array(ds[<span class="st">"embedding"</span>]) <span class="co"># shape : (6500, 768)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>ds <span class="op">=</span> load_from_disk(<span class="st">"path/to/file"</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>docs <span class="op">=</span> np.array(ds[<span class="ss">f"resumes.en"</span>]) <span class="co"># Number of documents : 6500</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>embeddings <span class="op">=</span> np.array(ds[<span class="st">"embedding"</span>]) <span class="co"># shape : (6500, 768)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>The columns in the dataset are the same as before in addition to an <code>embedding</code> column containing the embeddings of the resumes.</p>
 </section>
 <section id="save-your-instance-locally" class="level2">
@@ -1325,22 +1385,22 @@ Figure&nbsp;9: <strong>XXX</strong>
 <li><code>serialization (str)</code>: must be <code>"safetensors"</code>, <code>"pickle"</code> or <code>"pytorch"</code>. We recommend to use <code>"safetensors"</code> or the <code>"pytorch"</code> format as they are broadly used in machine learning and recommended by the <a href="https://maartengr.github.io/BERTopic/api/bertopic.html#bertopic._bertopic.BERTopic.save">BERTopic documentation</a><a href="#fn16" class="footnote-ref" id="fnref16" role="doc-noteref"><sup>16</sup></a>.</li>
 <li><code>save_ctfidf (bool)</code> : wether to save the vectorizer configuration or not. This is the heaviest bit (see table below).</li>
 </ul>
-<div class="sourceCode" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ~ 500 KB</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>topic_model.save(</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    path <span class="op">=</span> <span class="st">"./bertopic-default"</span>,</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    serialization <span class="op">=</span> <span class="st">"safetensors"</span>,</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    save_ctfidf <span class="op">=</span> <span class="va">False</span></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="co"># ~ 6MB</span></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>topic_model.save(</span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    path <span class="op">=</span> <span class="st">"./bertopic-default-with-ctfidf"</span>,</span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    serialization <span class="op">=</span> <span class="st">"safetensors"</span>,</span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>    save_ctfidf <span class="op">=</span> <span class="va">True</span></span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ~ 500 KB</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>topic_model.save(</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    path <span class="op">=</span> <span class="st">"./bertopic-default"</span>,</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    serialization <span class="op">=</span> <span class="st">"safetensors"</span>,</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    save_ctfidf <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="co"># ~ 6MB</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>topic_model.save(</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>    path <span class="op">=</span> <span class="st">"./bertopic-default-with-ctfidf"</span>,</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>    serialization <span class="op">=</span> <span class="st">"safetensors"</span>,</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>    save_ctfidf <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><em>For more information on the content of what’s saved and the size of files.</em></p>
 <p>The to reload your instance you just need to use the <code>load</code> method:</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>topic_model <span class="op">=</span> BERTopic.load(<span class="st">"./bertopic-default"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>topic_model <span class="op">=</span> BERTopic.load(<span class="st">"./bertopic-default"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Saving the instance is a good practice, as we will see below, when reducing the number of topics, the instance is updated and you can’t go back. Hence, we would recommend to save at least one instance — <em>or rerun the whole cell</em>.</p>
 </section>
 </section>

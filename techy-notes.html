@@ -330,19 +330,24 @@ window.Quarto = {
 <section id="clustering-metrics" class="level1">
 <h1>Clustering metrics</h1>
 <p>One could choose to focus on evaluating the clustering model to tune the HDBSCAN and UMAP parameters. There exist many metrics for evaluating clustering models that you can find on the <a href="https://scikit-learn.org/stable/modules/clustering.html#clustering-performance-evaluation">scikit-learn website</a>. However, amid the 9 presented, 4 require a ground truth that we don’t have[^11], 3 are ill-suited to HDBSCAN clustering[^12] and the two last are good metrics to be optimised.</p>
-<p>Hence, we need to find metrics that are relevant to the density-based clustering models such as the DBCV Index (Moulavi et al., 2014)[^13] or the DISCO index (Beer et al., 2025).</p>
+<p>Hence, we need to find metrics that are relevant to the density-based clustering models such as the DBCV Index (Moulavi et al., 2014)<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> or the DISCO index (Beer et al., 2025).</p>
 <p>In our experience, optimising these metrics result in a sub-optimal solutions as illustrated bellow.</p>
 <p><em>figure to come</em></p>
 <p>We don’t really recommend using clustering metrics to evaluate your topic model.</p>
 </section>
 <section id="coherence-metrics" class="level1">
 <h1>Coherence metrics</h1>
-<p>[^13] The index was designed by the same team that designed HDBSCAN (Campello et al., 2013)</p>
 
 
 </section>
 
-</main> <!-- /main -->
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>The index was designed by the same team that designed HDBSCAN (Campello et al., 2013)<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
