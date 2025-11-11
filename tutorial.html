@@ -209,6 +209,7 @@ window.Quarto = {
   </ul></li>
   <li><a href="#good-practices" id="toc-good-practices" class="nav-link" data-scroll-target="#good-practices">Good practices</a>
   <ul class="collapse">
+  <li><a href="#precompute-your-embeddings" id="toc-precompute-your-embeddings" class="nav-link" data-scroll-target="#precompute-your-embeddings">Precompute your embeddings</a></li>
   <li><a href="#save-your-instance-locally" id="toc-save-your-instance-locally" class="nav-link" data-scroll-target="#save-your-instance-locally">Save your instance locally</a></li>
   </ul></li>
   <li><a href="#bibliography" id="toc-bibliography" class="nav-link" data-scroll-target="#bibliography">Bibliography</a></li>
@@ -1309,11 +1310,14 @@ Figure&nbsp;9: <strong>XXX</strong>
 </section>
 <section id="good-practices" class="level1">
 <h1>Good practices</h1>
+<section id="precompute-your-embeddings" class="level2">
+<h2 class="anchored" data-anchor-id="precompute-your-embeddings">Precompute your embeddings</h2>
 <p>Pre-computing the embeddings is a good practice as it will prevent from computing them at each run, but also because it allows you to use a broader spectrum of embedding models that could ne necessarily be used with BERTopic<a href="#fn15" class="footnote-ref" id="fnref15" role="doc-noteref"><sup>15</sup></a>. We retrieve the embeddings and the documents</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>ds <span class="op">=</span> load_from_disk(<span class="st">"path/to/file"</span>)</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>docs <span class="op">=</span> np.array(ds[<span class="ss">f"resumes.en"</span>]) <span class="co"># Number of documents : 6500</span></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>embeddings <span class="op">=</span> np.array(ds[<span class="st">"embedding"</span>]) <span class="co"># shape : (6500, 768)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>The columns in the dataset are the same as before in addition to an <code>embedding</code> column containing the embeddings of the resumes.</p>
+</section>
 <section id="save-your-instance-locally" class="level2">
 <h2 class="anchored" data-anchor-id="save-your-instance-locally">Save your instance locally</h2>
 <p>For reproducibility purposes, and more generally, to save your work, BERTopic lets you do that with the <code>save</code> method. Two parameters of importance:</p>
@@ -1458,7 +1462,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
+      var filterRegex = new RegExp("https:\/\/AXLMRIN\.github\.io\/bertopic-tutorial\/");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
