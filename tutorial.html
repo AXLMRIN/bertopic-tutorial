@@ -239,20 +239,6 @@ window.Quarto = {
 </header>
 
 
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Warning
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Ne pas se focaliser que sur l’exploratoire</p>
-<p>Need to rerun it all and double check comments</p>
-</div>
-</div>
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
 <p>What are the main issues adressed in a set of documents ? Are those documents similar or discussing different issues ? What is the most important topic ? Delineating the main topics in a set of documents is a common task in social sciences; especially when working with a new corpus. Of course, identifying the topics can be done by hand. But when dealing with large corpora, this task is almost impossible; hence, for quite some time now, social scientists have used <strong>topic modelling</strong> techniques to quickly extract the main themes in their corpus (Asmussen &amp; Møller, 2019), either to explore them or to attribute a label to each document to conduct further analysis.</p>
@@ -466,7 +452,7 @@ Figure&nbsp;2: 2D plot of the french theses after tuning the topic model
 <h3 class="anchored" data-anchor-id="how-to-generate-the-embeddings">How to generate the embeddings?</h3>
 <p>To generate the embeddings we use encoder models. Encoder models are a type of pre-trained transformer models<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> whose job is to encapsulate the semantic of textual data. A good example of encoder is the BERT model and all it’s successors like RoBERTa, DeBERTa … For generating embeddings, BERTopic uses <strong>SBERT</strong>. Encoder models can take in a limitted number of tokens (parts of words), this is called the <strong>context window size</strong>. For smaller models, the context window size is of about 500 tokens (200 words on average) like for BERT and larger models like ModernBERT have a context window size of 8,000 tokens.</p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Learn more about embedding techniques">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -475,7 +461,7 @@ Learn more about embedding techniques
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ul>
 <li><a href="https://maartengr.github.io/BERTopic/getting_started/embeddings/embeddings.html">BERTopic documentation on embeddings</a></li>
@@ -487,7 +473,7 @@ Learn more about embedding techniques
 </div>
 <p>The embeddings — ie the generated vectors, contain hundreds of dimensions (for instance, the dimension of BERT’s embeddings is 512). Clustering algorithms work poorly with this many dimensions so we need to reduce the dimensionality of the embedding space (typically between 2 and 10). To reduce the dimensionality, the BERTopic pipeline uses the <strong>UMAP</strong> algorithm for it’s ability to grasp local and global structures (McInnes et al., 2018)<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. This mean that, despite moving from several hundreds of dimensions to only a couple, documents that are close together will stay close and distant ones will stay further apart. This is a critical step as we are heavily changing the structure of the data.</p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Learn more about dimensionality reduction and UMAP">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -496,7 +482,7 @@ Learn more about dimensionality reduction and UMAP
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ul>
 <li><a href="https://www.ibm.com/think/topics/dimensionality-reduction">“What is dimensionality reduction?” by Eda Kavlakoglu (IBM)</a></li>
@@ -513,7 +499,7 @@ Learn more about dimensionality reduction and UMAP
 <p>The goal for the clustering algorithm is to create groups of documents that are semantically close. We are not certain that the output clusters will be “real” topics, but we tune the BERTopic pipeline in order for the clusters to be representatives of topics that are latent in our corpus.</p>
 <p>Different algorithms can be used for clustering. <strong>HDBSCAN</strong> was chosen for it’s ability to detect clusters based on their density, hence it is able to detect clusters of various shapes and density. HDBSCAN also allows for documents to be labeled as noise to primarily focus on dense and coherent groups.</p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Learn more about clustering techniques and HDBSCAN">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -522,7 +508,7 @@ Learn more about clustering techniques and HDBSCAN
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ul>
 <li><a href="https://scikit-learn.org/stable/modules/clustering.html">Clustering by Scikit-Learn</a></li>
@@ -540,7 +526,7 @@ Learn more about clustering techniques and HDBSCAN
 <p>To achieve that, it needs to come back to the text document and discompose it at the word level<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. It uses word-count-based techniques that will count the number of occurrences of each word<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> in each document. However, there are plenty of words we don’t want to count because they do not carry much semantic information (ex: “the”, “I”, “is”, “but”, … ). These words are called stop words and are skipped.</p>
 <p>To do so, we use the <code>CountVectorizer</code> object that will create a word x document matrix.</p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Example">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -549,7 +535,7 @@ Example
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Given the two following documents:</p>
 <ul>
@@ -598,7 +584,7 @@ Example
 </div>
 <p>The word x document matrix is never used as is and needs transformation to outline relevant words. The usual transformation is called TF-IDF. This transformation raises the score of words that appear often in a document and decreases the score of words that appear in many documents. In BERTopic, they use an alternative called <strong>c-TF-IDF</strong>. This transformation raises the score of words that appear often in documents of the same group and decreases the score of words appearing in other groups. With this transformation, we retrieve words that make a group unique!</p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Learn more about bag-of-words and TF-IDF">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -607,7 +593,7 @@ Learn more about bag-of-words and TF-IDF
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ul>
 <li><a href="https://web.stanford.edu/~jurafsky/slp3/3.pdf">“N-gram Language Models” Chapter 3 of Speech and Language Processing by D.Jurafsky and J.H.Martin</a></li>
