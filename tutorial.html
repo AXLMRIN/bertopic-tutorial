@@ -192,7 +192,7 @@ window.Quarto = {
   <li><a href="#preprocessing-your-data" id="toc-preprocessing-your-data" class="nav-link" data-scroll-target="#preprocessing-your-data">Preprocessing your data</a></li>
   <li><a href="#lets-code" id="toc-lets-code" class="nav-link" data-scroll-target="#lets-code">Let’s code!</a></li>
   <li><a href="#sec-create-instance" id="toc-sec-create-instance" class="nav-link" data-scroll-target="#sec-create-instance">Create a BERTopic instance, fit and transform</a></li>
-  <li><a href="#how-to-visualise-your-results" id="toc-how-to-visualise-your-results" class="nav-link" data-scroll-target="#how-to-visualise-your-results">How to visualise your results</a>
+  <li><a href="#sec-visualise-your-results" id="toc-sec-visualise-your-results" class="nav-link" data-scroll-target="#sec-visualise-your-results">How to visualise your results</a>
   <ul class="collapse">
   <li><a href="#d-plot" id="toc-d-plot" class="nav-link" data-scroll-target="#d-plot">2D plot</a></li>
   <li><a href="#visualise-top-words-per-topic" id="toc-visualise-top-words-per-topic" class="nav-link" data-scroll-target="#visualise-top-words-per-topic">Visualise top words per topic</a></li>
@@ -210,6 +210,7 @@ window.Quarto = {
   <li><a href="#good-practices" id="toc-good-practices" class="nav-link" data-scroll-target="#good-practices">Good practices</a>
   <ul class="collapse">
   <li><a href="#precompute-your-embeddings" id="toc-precompute-your-embeddings" class="nav-link" data-scroll-target="#precompute-your-embeddings">Precompute your embeddings</a></li>
+  <li><a href="#force-deterministic-behaviour" id="toc-force-deterministic-behaviour" class="nav-link" data-scroll-target="#force-deterministic-behaviour">Force deterministic behaviour</a></li>
   <li><a href="#save-your-instance-locally" id="toc-save-your-instance-locally" class="nav-link" data-scroll-target="#save-your-instance-locally">Save your instance locally</a></li>
   </ul></li>
   <li><a href="#bibliography" id="toc-bibliography" class="nav-link" data-scroll-target="#bibliography">Bibliography</a></li>
@@ -254,7 +255,7 @@ Warning
 </div>
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>What are the main issues adressed in a set of documents ? Are those documents similar or discussing different issues ? What is the most important topic ? Delineating the main topics in a set of documents is a common task in social sciences; especially when working with a new corpus. Of course, identifying the topics can be done by hand, reading each document. But when dealing with large corpora, this task is almost impossible; hence, for quite some time now, social scientists have used <strong>topic modelling</strong> techniques to quickly extract the main themes in their corpus (Asmussen &amp; Møller, 2019), either to explore them or to attribute a label to each document to conduct further analysis.</p>
+<p>What are the main issues adressed in a set of documents ? Are those documents similar or discussing different issues ? What is the most important topic ? Delineating the main topics in a set of documents is a common task in social sciences; especially when working with a new corpus. Of course, identifying the topics can be done by hand. But when dealing with large corpora, this task is almost impossible; hence, for quite some time now, social scientists have used <strong>topic modelling</strong> techniques to quickly extract the main themes in their corpus (Asmussen &amp; Møller, 2019), either to explore them or to attribute a label to each document to conduct further analysis.</p>
 <blockquote class="blockquote">
 <p><strong>Topic modelling</strong> is a natural language processing task that extracts latent topics structuring a corpora.<br> <em>For instance, Jockers &amp; Mimno (2013) extracted broad themes in the English literature from the 19th century.</em></p>
 <p><strong>Natural language processing (NLP)</strong> is a subfield of computer science that analyses textual data. Main NLP tasks are text generation (like chatGPT), text classification, or topic modelling.</p>
@@ -265,7 +266,7 @@ Warning
 <img src="assets/topic_modelling_scheme.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-schema-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: Topic Modelling <strong>XXX</strong>
+Figure&nbsp;1: Topic Modelling in-out sketch
 </figcaption>
 </figure>
 </div>
@@ -283,7 +284,7 @@ Figure&nbsp;1: Topic Modelling <strong>XXX</strong>
 <p>We don’t assume that you have any knowledge about NLP and try our best to explain every step in an agnostic manner. We also provide numerous references if you want to dig deeper.</p>
 <p>Nevertheless, you need to have some notions of Python. If you need to refresh your Python skills, you can use <a href="https://pythonds.linogaliana.fr/en/">Lino Galina’s courses</a>. We assume that:</p>
 <ul>
-<li>you have a working environment<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> and can install packages</li>
+<li>you have a working environment and can install packages</li>
 <li>you know the basic syntax of Python (functions, variables, if-statements, for loops) and you’re comfortable enough with Pandas to load your documents and proceed to simple manipulations such as creating, dropping and renaming columns and rows.</li>
 </ul>
 <p>In this tutorial, we use python 3.12, and you can install the packages we will need with :</p>
@@ -352,8 +353,13 @@ Note
 <p>We can then retrieve topic information that will return keywords that best represent our corpus:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>topic_info <span class="op">=</span> topic_model.get_topic_info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>The <code>topic_info</code> variable is a table like this :</p>
+<div id="tbl-topics-example" class="quarto-float quarto-figure quarto-figure-center anchored" data-tbl-colwidths="[10, 10, 20, 20,40]">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-topics-example-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Topic information for a simplified corpus
+</figcaption>
+<div aria-describedby="tbl-topics-example-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
-<caption>Table X: <strong>XXX</strong></caption>
 <colgroup>
 <col style="width: 10%">
 <col style="width: 10%">
@@ -387,10 +393,18 @@ Note
 </tr>
 </tbody>
 </table>
+</div>
+</figure>
+</div>
 <p>The <code>Topic</code> column lists the topic IDs, the <code>Count</code> column lists the number of element there are in each topic, the <code>Name</code> column is a summary of topic ID and keywords — listed in the <code>Representation</code> column, and finally the <code>Representative_Docs</code> lists example of documents that are representative of the topic.</p>
 <p>In reality, this example would not run because there are not enough documents! Let’s have a look at what one can expect from BERTopic, working with a real dataset: the abstracts of all the theses defended in France since 2010. After carefully setting the parameters and verifying the topic model’s quality, we obtain the following results:</p>
+<div id="tbl-final-example" class="quarto-float quarto-figure quarto-figure-center anchored" data-tbl-colwidths="[10, 20, 20,50]">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-final-example-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: Topic information of the french theses after tuning the topic model
+</figcaption>
+<div aria-describedby="tbl-final-example-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
-<caption>Table X: <strong>XXX</strong></caption>
 <colgroup>
 <col style="width: 10%">
 <col style="width: 20%">
@@ -426,13 +440,16 @@ Note
 </tr>
 </tbody>
 </table>
+</div>
+</figure>
+</div>
 <div id="fig-2d-plot-intro" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-2d-plot-intro-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="./assets/tuto_2d_plot.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-2d-plot-intro-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2: XXX
+Figure&nbsp;2: 2D plot of the french theses after tuning the topic model
 </figcaption>
 </figure>
 </div>
@@ -447,10 +464,9 @@ Figure&nbsp;2: XXX
 </ul>
 <section id="how-to-generate-the-embeddings" class="level3">
 <h3 class="anchored" data-anchor-id="how-to-generate-the-embeddings">How to generate the embeddings?</h3>
-<p>To generate the embeddings we use encoder models. Encoder models are a type of pre-trained transformer models<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> whose job is to encapsulate the semantic of textual data. A good example of encoder is the BERT model and all it’s successors like RoBERTa, DeBERTa … For generating embeddings, BERTopic uses <strong>SBERT</strong>. Encoder models can take in a limitted number of tokens (parts of words), this is called the <strong>context window size</strong>. For smaller models, the context window size is of about 500 tokens (200 words on average) like for BERT and larger models like ModernBERT have a context window size of 8,000 tokens.</p>
-<p>The embeddings — ie the generated vectors, contain hundreds of dimensions (for instance, the dimension of BERT’s embeddings is 512). Clustering algorithms work poorly with this many dimensions<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> so we need to reduce the dimensionality of the embedding space (typically between 2 and 10). To reduce the dimensionality, the BERTopic pipeline uses the <strong>UMAP</strong> algorithm for it’s ability to grasp local and global structures (McInnes et al., 2018)<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>. This mean that, despite moving from several hundreds of dimensions to only a couple, documents that are close together will stay close and distant ones will stay further apart. This is a critical step as we are heavily changing the structure of the data.</p>
+<p>To generate the embeddings we use encoder models. Encoder models are a type of pre-trained transformer models<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> whose job is to encapsulate the semantic of textual data. A good example of encoder is the BERT model and all it’s successors like RoBERTa, DeBERTa … For generating embeddings, BERTopic uses <strong>SBERT</strong>. Encoder models can take in a limitted number of tokens (parts of words), this is called the <strong>context window size</strong>. For smaller models, the context window size is of about 500 tokens (200 words on average) like for BERT and larger models like ModernBERT have a context window size of 8,000 tokens.</p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Learn more about embedding techniques">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -459,16 +475,19 @@ Learn more about embedding techniques
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse show">
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ul>
-<li><a href="https://maartengr.github.io/BERTopic/getting_started/embeddings/embeddings.html">Lien vers la documentation complète de BERTopic</a></li>
+<li><a href="https://maartengr.github.io/BERTopic/getting_started/embeddings/embeddings.html">BERTopic documentation on embeddings</a></li>
+<li><a href="https://jalammar.github.io/illustrated-transformer/">“The illustrated Transformer” by Jay Alammar</a></li>
+<li><a href="https://www.youtube.com/watch?v=wjZofJX0v4M">A visual explanation of general concepts behind LLMs by 3Blue1Brown</a></li>
 </ul>
 </div>
 </div>
 </div>
+<p>The embeddings — ie the generated vectors, contain hundreds of dimensions (for instance, the dimension of BERT’s embeddings is 512). Clustering algorithms work poorly with this many dimensions so we need to reduce the dimensionality of the embedding space (typically between 2 and 10). To reduce the dimensionality, the BERTopic pipeline uses the <strong>UMAP</strong> algorithm for it’s ability to grasp local and global structures (McInnes et al., 2018)<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. This mean that, despite moving from several hundreds of dimensions to only a couple, documents that are close together will stay close and distant ones will stay further apart. This is a critical step as we are heavily changing the structure of the data.</p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Learn more about dimensionality reduction and UMAP">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -477,14 +496,11 @@ Learn more about dimensionality reduction and UMAP
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse show">
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>On dimensionality reduction:</p>
 <ul>
-<li>XX</li>
-</ul>
-<p>On UMAP:</p>
-<ul>
+<li><a href="https://www.ibm.com/think/topics/dimensionality-reduction">“What is dimensionality reduction?” by Eda Kavlakoglu (IBM)</a></li>
+<li><a href="https://umap-learn.readthedocs.io/en/latest/">UMAP documentation</a></li>
 <li><a href="https://www.youtube.com/watch?v=eN0wFzBA4Sc">Youtube videos to understand the main ideas (StatQuest)</a> and the <a href="https://youtu.be/jth4kEvJ3P8?si=ZM66Ko6TyV4Vyy7E">mathematical details (StatQuest)</a>.</li>
 <li><a href="https://pair-code.github.io/understanding-umap/">To explore the impact of the UMAP parameters</a>.</li>
 </ul>
@@ -497,7 +513,7 @@ Learn more about dimensionality reduction and UMAP
 <p>The goal for the clustering algorithm is to create groups of documents that are semantically close. We are not certain that the output clusters will be “real” topics, but we tune the BERTopic pipeline in order for the clusters to be representatives of topics that are latent in our corpus.</p>
 <p>Different algorithms can be used for clustering. <strong>HDBSCAN</strong> was chosen for it’s ability to detect clusters based on their density, hence it is able to detect clusters of various shapes and density. HDBSCAN also allows for documents to be labeled as noise to primarily focus on dense and coherent groups.</p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Learn more about clustering techniques and HDBSCAN">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -506,14 +522,10 @@ Learn more about clustering techniques and HDBSCAN
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse show">
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>On clustering:</p>
 <ul>
-<li>XXX</li>
-</ul>
-<p>On HDBSCAN:</p>
-<ul>
+<li><a href="https://scikit-learn.org/stable/modules/clustering.html">Clustering by Scikit-Learn</a></li>
 <li><a href="https://youtu.be/dGsxd67IFiU?si=18wnb1nh1oJxyHzH">Presentation of HDBSCAN by John Healy - PyData NYC 2018</a></li>
 <li><a href="https://hdbscan.readthedocs.io/en/latest/index.html">The HDBSCAN documentation</a></li>
 <li><a href="https://scikit-learn.org/stable/modules/clustering.html#hdbscan">The Scikit-Learn documentation of HDBSCAN</a></li>
@@ -525,17 +537,19 @@ Learn more about clustering techniques and HDBSCAN
 <section id="how-to-retrieve-relevant-keywords-for-each-topic" class="level3">
 <h3 class="anchored" data-anchor-id="how-to-retrieve-relevant-keywords-for-each-topic">How to retrieve relevant keywords for each topic</h3>
 <p>Once we have created groups of documents, we need to create a meaningful representation with keywords. The general idea in BERTopic is to identify keywords that best describe the specificity of each topic.</p>
-<p>To achieve that, it needs to come back to the text document and discompose it at the word level<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>. It uses word-count-based techniques that will count the number of occurrences of each word<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a> in each document. However, there are plenty of words we don’t want to count because they do not carry much semantic information (ex: “the”, “I”, “is”, “but”, … ). These words are called stop words and are skipped.</p>
+<p>To achieve that, it needs to come back to the text document and discompose it at the word level<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. It uses word-count-based techniques that will count the number of occurrences of each word<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> in each document. However, there are plenty of words we don’t want to count because they do not carry much semantic information (ex: “the”, “I”, “is”, “but”, … ). These words are called stop words and are skipped.</p>
 <p>To do so, we use the <code>CountVectorizer</code> object that will create a word x document matrix.</p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Example">
-<div class="callout-header d-flex align-content-center">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
 Example
 </div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Given the two following documents:</p>
 <ul>
@@ -581,7 +595,27 @@ Example
 </table>
 </div>
 </div>
+</div>
 <p>The word x document matrix is never used as is and needs transformation to outline relevant words. The usual transformation is called TF-IDF. This transformation raises the score of words that appear often in a document and decreases the score of words that appear in many documents. In BERTopic, they use an alternative called <strong>c-TF-IDF</strong>. This transformation raises the score of words that appear often in documents of the same group and decreases the score of words appearing in other groups. With this transformation, we retrieve words that make a group unique!</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Learn more about bag-of-words and TF-IDF">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Learn more about bag-of-words and TF-IDF
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ul>
+<li><a href="https://web.stanford.edu/~jurafsky/slp3/3.pdf">“N-gram Language Models” Chapter 3 of Speech and Language Processing by D.Jurafsky and J.H.Martin</a></li>
+<li><a href="https://melaniewalsh.github.io/Intro-Cultural-Analytics/05-Text-Analysis/03-TF-IDF-Scikit-Learn.html#id1">Tutorial TF-IDF with Scikit-Learn</a></li>
+</ul>
+</div>
+</div>
+</div>
 </section>
 </section>
 <section id="conclusion" class="level2">
@@ -598,9 +632,22 @@ Example
 <img src="./assets/bertopic-general-en.svg" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-general-illustration-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3: XXX
+Figure&nbsp;3: The 6 steps of BERTopic <a href="https://maartengr.github.io/BERTopic/algorithm/algorithm.html#visual-overview">source</a>
 </figcaption>
 </figure>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The Optional Fine-tuning step is not covered in this tutorial. This step proposes to use generative LLMs to describe the topics.</p>
+</div>
 </div>
 </section>
 </section>
@@ -609,10 +656,10 @@ Figure&nbsp;3: XXX
 <p>Now we understand broadly the BERTopic pipeline, let’s see how to apply it to our dataset.</p>
 <section id="preprocessing-your-data" class="level2">
 <h2 class="anchored" data-anchor-id="preprocessing-your-data">Preprocessing your data</h2>
-<p>As mentioned before, we will use the dataset listing all theses defended in France since 1985. The original dataset can be downloaded on <a href="https://www.data.gouv.fr/datasets/theses-soutenues-en-france-depuis-1985/">data.gouv.fr</a>. To avoid excessive pre-processing, we curated<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a> the dataset and uploaded it (with the code) on <a href="https://doi.org/10.5281/zenodo.17416954">Zenodo</a>.</p>
+<p>As mentioned before, we will use the dataset listing all theses defended in France since 1985. The original dataset can be downloaded on <a href="https://www.data.gouv.fr/datasets/theses-soutenues-en-france-depuis-1985/">data.gouv.fr</a>. To avoid excessive pre-processing, we curated<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> the dataset and uploaded it (with the code) on <a href="https://doi.org/10.5281/zenodo.17416954">Zenodo</a>.</p>
 <p>It is crucial to stress that the preprocessing step is <strong>the most important step</strong>. Although we can tune the topic model towards meaningful clusters and representations, your corpus is your input and no model will generate good results out of poor inputs. We list a number of questions you need to consider and justify for your topic model to be relevant:</p>
 <p><strong>Is my corpus homogenous enough ?</strong></p>
-<p>It could be tempting to shove millions of different documents from different sources in a topic model and see what comes out. However, to make sure that the groups will represent topics, one must be sure that your documents are similar in formality, tone, length, density of information etc… If your corpus is too heterogenous, the topic model can highlight theses differences and you will lose sight of meaningful latent topics<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a>.</p>
+<p>It could be tempting to shove millions of different documents from different sources in a topic model and see what comes out. However, to make sure that the groups will represent topics, one must be sure that your documents are similar in formality, tone, length, density of information etc… If your corpus is too heterogenous, the topic model can highlight theses differences and you will lose sight of meaningful latent topics<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>.</p>
 <p>In our case, as we analyse theses resumes which are quite standardised, the corpus should be homogenous enough for the topic model to pick up topics and not other semantic dimensions.</p>
 <p><strong>Are my documents in the right language?</strong></p>
 <p>Most of the time, language models are trained in a single language. Some models are said multi-lingual and accept texts in more than one language. However, in our experience, working with documents in different languages generates poor topics as the language shift holds for the most salient difference and each language is clustered by itself. We recommend translating your documents in a single language beforehand.</p>
@@ -648,7 +695,7 @@ Figure&nbsp;3: XXX
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>df_raw[<span class="st">"resumes.fr.len"</span>] <span class="op">=</span> df_raw[<span class="st">"resumes.fr"</span>].<span class="bu">apply</span>(<span class="bu">len</span>)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>df_raw.loc[:,[<span class="st">"resumes.en.len"</span>, <span class="st">"resumes.fr.len"</span>]].describe()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <table class="caption-top table">
-<caption>Table 2: <strong>XXX</strong></caption>
+<caption>Descriptive statistics of the length of the resumes in english and in french</caption>
 <colgroup>
 <col style="width: 20%">
 <col style="width: 40%">
@@ -699,7 +746,7 @@ Figure&nbsp;3: XXX
 </tr>
 </tbody>
 </table>
-<p>With these statistics, we see that we can rule out using <code>sentence-transformers/all-MiniLM-L6-v2</code> because it’s context window is too narrow. By keeping resumes between 1000 and 4000 characters (ie between 300 and 1300 tokens<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a>) we can keep most of the dataset (89%) while maintaining a reasonable computation time.</p>
+<p>With these statistics, we see that we can rule out using <code>sentence-transformers/all-MiniLM-L6-v2</code> because it’s context window is too narrow. By keeping resumes between 1000 and 4000 characters (ie between 300 and 1300 tokens[^7]) we can keep most of the dataset (89%) while maintaining a reasonable computation time.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>valid_index <span class="op">=</span> np.logical_and.<span class="bu">reduce</span>([</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    df_raw[<span class="st">"resumes.fr.len"</span>] <span class="op">&gt;=</span> <span class="dv">1000</span>,</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    df_raw[<span class="st">"resumes.fr.len"</span>] <span class="op">&lt;=</span> <span class="dv">4000</span>,</span>
@@ -708,7 +755,7 @@ Figure&nbsp;3: XXX
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>])</span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df_raw.loc[valid_index,:]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Even if it is more interesting to process the complete dataset, it can be computationally expensive. To limit computation time at least for the exploratory steps, we are going to work on a sample of documents. To maintain some representativeness, we stratify this sampling by the year of the defence<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a>.</p>
+<p>Even if it is more interesting to process the complete dataset, it can be computationally expensive. To limit computation time at least for the exploratory steps, we are going to work on a sample of documents. To maintain some representativeness, we stratify this sampling by the year of the defence<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a>.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>stratification_column <span class="op">=</span> <span class="st">"year"</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>samples_per_stratum <span class="op">=</span> <span class="dv">500</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>df_stratified <span class="op">=</span> (</span>
@@ -761,8 +808,13 @@ Figure&nbsp;3: XXX
 <p>And to explore the topics we can call the <code>get_topics_info</code> method that will return a table with the keywords, representative documents and the number of documents in each topic:</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>topic_info <span class="op">=</span> topic_model.get_topic_info()</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>topic_info</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="tbl-topics-truncated" class="quarto-float quarto-figure quarto-figure-center anchored" data-tbl-colwidths="[10, 10, 10, 70]">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-topics-truncated-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: Topic information (truncated) of the french theses for a basic topic model
+</figcaption>
+<div aria-describedby="tbl-topics-truncated-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
-<caption>Table X: <strong>XXX (truncated)</strong></caption>
 <colgroup>
 <col style="width: 10%">
 <col style="width: 10%">
@@ -846,6 +898,9 @@ Figure&nbsp;3: XXX
 </tr>
 </tbody>
 </table>
+</div>
+</figure>
+</div>
 <p>The “Representation” column provides the keywords for each topic. We can see that the keywords retrieved for the noise cluster are very generic: “study”, “thesis”, “model”, “analysis”, “approach” and do not convey any meaningful information other than the fact that all documents are academic documents. <br></p>
 <p>For each topic the model retrieves very specific keywords that fit together such as:</p>
 <ul>
@@ -856,7 +911,7 @@ Figure&nbsp;3: XXX
 <p>This is not a proof that our model generated interesting results, for that we need to carry further investigation of each cluster, still this is a first step towards appreciating the quality of the topic model.</p>
 <p>In this table we can see that almost half of the documents are classified as noise (topic -1). This is a normal behaviour of the clustering algorithm as it focuses on dense areas first. This way, the topic model creates representations that focus fewer documents to retrieve very specific keywords. The other 104 topics contain between 10 and 200 documents each, which correspond to 0.1% to 3% of the corpus.</p>
 <p>It is worth noting that the more documents in a cluster, the lower the topic index is.</p>
-<p>It is possible to re-assign clusters to documents clustered as noise with the <code>reduce_outliers</code><a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a> method, based on XXXX: <!-- AM: based on ??? what do you mean --></p>
+<p>It is possible to re-assign clusters to documents clustered as noise with the <code>reduce_outliers</code> method, based on the documentation and the code, we recommend using the <em>“embedding”</em> strategy<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a>:</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>topics_reduced <span class="op">=</span> topic_model.reduce_outliers(</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    documents <span class="op">=</span> docs, </span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    topics <span class="op">=</span> topics, </span>
@@ -878,8 +933,8 @@ Warning
 </div>
 </div>
 </section>
-<section id="how-to-visualise-your-results" class="level2">
-<h2 class="anchored" data-anchor-id="how-to-visualise-your-results">How to visualise your results</h2>
+<section id="sec-visualise-your-results" class="level2">
+<h2 class="anchored" data-anchor-id="sec-visualise-your-results">How to visualise your results</h2>
 <p>Visualising your topics is central in topic modelling as this is most convenient way to explore your documents and your topic model. We are going to cover some of the most basic and helpful visualisations.</p>
 <section id="d-plot" class="level3">
 <h3 class="anchored" data-anchor-id="d-plot">2D plot</h3>
@@ -901,7 +956,7 @@ Warning
 <img src="./assets/tuto_2d_plot.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-2d-plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4: <strong>XXX</strong> <a href="#fn13" class="footnote-ref" id="fnref13" role="doc-noteref"><sup>13</sup></a>
+Figure&nbsp;4: 2D plot of the french theses for a basic topic model<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a>
 </figcaption>
 </figure>
 </div>
@@ -923,7 +978,7 @@ Figure&nbsp;4: <strong>XXX</strong> <a href="#fn13" class="footnote-ref" id="fnr
 <img src="./assets/tuto_top_n_words.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-top-n-words-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5: <strong>XXX</strong>
+Figure&nbsp;5: Top <span class="math inline">\(n\)</span> words per topic of the french theses for a basic topic model
 </figcaption>
 </figure>
 </div>
@@ -939,7 +994,7 @@ Figure&nbsp;5: <strong>XXX</strong>
 <img src="./assets/tuto_hierarchical.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hierarchical-plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6: <strong>XXX</strong>
+Figure&nbsp;6: Hierarchical graph of the french theses for a basic topic model
 </figcaption>
 </figure>
 </div>
@@ -988,7 +1043,7 @@ Figure&nbsp;6: <strong>XXX</strong>
 <img src="./assets/tuto_topics_per_class.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-topic-per-class-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;7: <strong>XXX</strong>
+Figure&nbsp;7: Topics distributed over the OAI tags of the french theses for a basic topic model
 </figcaption>
 </figure>
 </div>
@@ -1003,7 +1058,7 @@ Figure&nbsp;7: <strong>XXX</strong>
 <img src="./assets/tuto_temporal_axis.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-temporal-axis-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;8: <strong>XXX</strong>
+Figure&nbsp;8: Number of theses over the years in each group of the french theses for a basic topic model
 </figcaption>
 </figure>
 </div>
@@ -1011,35 +1066,20 @@ Figure&nbsp;8: <strong>XXX</strong>
 </section>
 <section id="sec-aggregate-topics" class="level2">
 <h2 class="anchored" data-anchor-id="sec-aggregate-topics">Aggregate topics</h2>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Warning
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Need further research, the reduce to n topic method does not use the hierarchical clustering of hdbscan, which is odd</p>
-<p>It seems like hdbscan is not chose to perform</p>
-<p>il y a une divergence entre la manière de visualiser la hierarchie et d’agréger les sujets ce qui fait que le lien est pas évident évident:</p>
-<ul>
-<li>visualize_hierarchy: uses ward linkage on c-tf-idf</li>
-<li>reduce_to_n_topics : uses average linkage on embeddings</li>
-</ul>
-<p>😬 &lt;- me, ie lost</p>
-</div>
-</div>
-<p>In our case, with more than 100 topics, it is difficult to have a general idea of the main latent themes in the corpus. Looking back to the <a href="#fig-hierarchical-plot" class="quarto-xref">Figure&nbsp;6</a> we can identify seven large branches we could reduce our topic model to.</p>
+<p>To aggregate topics, the algorithm proposed is to use the topic embeddings<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a>, compute the cosine similarity matrix and use the agglomerative clustering algorithm described <a href="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.AgglomerativeClustering.html">here</a> to aggregate the topics. Once performed, all the documents are moved into a new group and keywords are re-generated. <br> With more than 100 topics, it is difficult to have a general idea of the main latent themes in the corpus. Looking back to the <a href="#fig-hierarchical-plot" class="quarto-xref">Figure&nbsp;6</a><a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a> we can identify seven large branches we could reduce our topic model to.</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>topic_model.reduce_topics(docs <span class="op">=</span> docs, nr_topics<span class="op">=</span><span class="dv">7</span> <span class="op">+</span> <span class="dv">1</span>) <span class="co">#Add one to account for the noise</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Retrieve the updated topics and probabilities</span></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>topics_reduced, probabilities_reduced <span class="op">=</span> topic_model.topics_, topic_model.probabilities_</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Then check the new representations like in the section <a href="#sec-create-instance" class="quarto-xref">Section&nbsp;3.3</a>.</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>topic_info_reduced <span class="op">=</span> topic_model.get_topic_info()</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>topic_info_reduced</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="tbl-topics-reduced" class="quarto-float quarto-figure quarto-figure-center anchored" data-tbl-colwidths="[10, 30, 60]">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-topics-reduced-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4: Topic information after aggregating topics
+</figcaption>
+<div aria-describedby="tbl-topics-reduced-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
-<caption>Table X: <strong>XXX</strong></caption>
 <colgroup>
 <col style="width: 10%">
 <col style="width: 30%">
@@ -1095,7 +1135,10 @@ Warning
 </tr>
 </tbody>
 </table>
-<p>Similarly to before, the noise topic contains very generic keywords. As for the rest, we can identify seven<a href="#fn14" class="footnote-ref" id="fnref14" role="doc-noteref"><sup>14</sup></a> main latent topics :</p>
+</div>
+</figure>
+</div>
+<p>Similarly to before, the noise topic contains very generic keywords. As for the rest, we can identify seven<a href="#fn13" class="footnote-ref" id="fnref13" role="doc-noteref"><sup>13</sup></a> main latent topics :</p>
 <ul>
 <li>Social Sciences</li>
 <li>Medicine and Health</li>
@@ -1107,8 +1150,13 @@ Warning
 </ul>
 <p>The topics are very general and give us key insights about our corpus. <br> It is important to notice that the very detailed analysis was useful to understand the more general one. For instance, the keywords for the second main topic are too general, but because we analysed our documents in details, we know that this topic is the result of merging “1_mechanical_numerical_behavior” and “3_flow_numerical_fluid”, allowing us to name this topic “Engineering Sciences, Experimentation and Simulation”.</p>
 <p>After reducing outliers, here is the distribution of topics across all out documents :</p>
+<div id="tbl-topics-reduced-stats" class="quarto-float quarto-figure quarto-figure-center anchored" data-tbl-colwidths="[50, 10, 20, 20]">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-topics-reduced-stats-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5: Repartition of the theses in the 7 aggregated topics
+</figcaption>
+<div aria-describedby="tbl-topics-reduced-stats-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
-<caption>Table X: <strong>XXX</strong></caption>
 <colgroup>
 <col style="width: 50%">
 <col style="width: 10%">
@@ -1168,20 +1216,10 @@ Warning
 </tr>
 </tbody>
 </table>
+</div>
+</figure>
+</div>
 <p>Finally, the 7th topic still seem very specific, even after reducing outliers, there are only 31 documents in this topic.</p>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Warning
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Careful though, even if the previous results let us think the topic model is coherent, we have not evaluated it yet.</p>
-</div>
-</div>
 </section>
 <section id="sec-tune-parameters" class="level2">
 <h2 class="anchored" data-anchor-id="sec-tune-parameters">Tune parameters</h2>
@@ -1190,7 +1228,7 @@ Warning
 <p>The first step is to choose the embedding model as it drastically alters the results of the topic model. To do this, you can embed your documents and plot the 2D map after dimension reduction with UMAP and <code>n_components=2</code>. Then, by exploring the map, you can assess if the embedding space created placed similar documents together or not.</p>
 <p>At this point you can also try different values for <code>n_neighbors</code> and <code>n_components</code>. However, be aware that the influence of UMAP parameters on the final topic model is difficult to appreciate at first glance.</p>
 <p><strong>Tune the granularity of the topic model</strong> (parameters tuned: <code>n_neighbors</code> and <code>min_cluster_size</code>)</p>
-<p>Once you’ve chose the embedding model to use, you can change the <code>n_neighbors</code> and <code>min_cluster_size</code>. Both work jointly: the lower these paramters, the smaller grain and more specific the topics.</p>
+<p>Once you’ve chosen the embedding model to use, you can change the <code>n_neighbors</code> and <code>min_cluster_size</code>. Both work jointly: the lower these paramters, the smaller grain and more specific the topics.</p>
 <p>To change these parameters, one must create <code>UMAP</code> and <code>HDBSCAN</code> instances and pass them on to the <code>BERTopic</code> model:</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load data and create the vectorizer model like before</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>language <span class="op">=</span> <span class="st">"english"</span> <span class="co"># or "french"</span></span>
@@ -1227,8 +1265,13 @@ Warning
 <span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a>    embeddings<span class="op">=</span>embeddings</span>
 <span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>We obtain the following results:</p>
+<div id="tbl-topics-tuned" class="quarto-float quarto-figure quarto-figure-center anchored" data-tbl-colwidths="[10, 20, 70]">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-topics-tuned-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;6: Topic information for a coarse grained topic model
+</figcaption>
+<div aria-describedby="tbl-topics-tuned-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
-<caption>Table X: <strong>XXX</strong></caption>
 <colgroup>
 <col style="width: 10%">
 <col style="width: 20%">
@@ -1274,84 +1317,171 @@ Warning
 </tr>
 </tbody>
 </table>
+</div>
+</figure>
+</div>
 <div id="fig-2D-map-tuned" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-2D-map-tuned-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="./assets/2D_general.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-2D-map-tuned-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;9: <strong>XXX</strong>
+Figure&nbsp;9: 2D map for a coarse grained topic model
 </figcaption>
 </figure>
 </div>
 </section>
 <section id="discussion-on-evaluating-a-topic-model" class="level2">
 <h2 class="anchored" data-anchor-id="discussion-on-evaluating-a-topic-model">Discussion on evaluating a topic model</h2>
-<p>Topic model evaluation is an active domain of research that goes beyond the scope of this tutorial. We propose an overview of the methods that exist and how to quickly tell if your topic model can be used or need to be refined.</p>
+<p>Topic model evaluation is an active domain of research that goes beyond the scope of this tutorial. We propose an overview of the methods that exist and how to quickly tell if your topic model can be used or needs to be refined.</p>
 <p>In short: quantitative methods are impractical and one should focus more on the qualitative evaluation.</p>
 <section id="qualitative-evaluation" class="level3">
 <h3 class="anchored" data-anchor-id="qualitative-evaluation">Qualitative evaluation</h3>
-<p>All along the tutorial, we have displayed many results and analysed them with the objective to answer the very question: is the topic model coherent? There is no one way around qualitatively evaluating your BERTopic, however the point is to offer some techniques we found useful and code snippet to quickly obtain key insights on your topic model performance.</p>
-<p><strong>Explore the 2D map</strong></p>
-<p>As depicted in <a href="#sec-tune-parameters" class="quarto-xref">Section&nbsp;3.6</a>, exploring the 2D map is a good way to explore the embedding space and tell if groups are made out of similar documents. It’s even better if you have additional tags that can make the exploration even faster.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>All along the tutorial, we have displayed many results and analysed them with the objective to answer the very question: is the topic model coherent? There is no one way around qualitatively evaluating your BERTopic, however the point is to offer some techniques we found useful and code snippets to quickly obtain key insights on your topic model performance.</p>
+<p><strong>Extensively use the visualisation tools</strong></p>
+<p>As presented in <a href="#sec-visualise-your-results" class="quarto-xref">Section&nbsp;3.4</a>, there are many tools to visualise the results of your topic model that can help you assess the coherence of the topics through 2D representation, top n words, hierarchical and the tag distribution.</p>
 <p><strong>Explore the merging process</strong></p>
 <p>When merging topics at <a href="#sec-aggregate-topics" class="quarto-xref">Section&nbsp;3.5</a> we may want to monitor what’s going where. The following snippet prints out the topics that were merged into them:</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> iRow_reduced, topic_id <span class="kw">in</span> <span class="bu">enumerate</span>(topic_info_reduced[<span class="st">"Topic"</span>]):</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(topic_info_reduced.loc[iRow_reduced, <span class="st">"Name"</span>].replace(<span class="st">"_"</span>, <span class="st">" "</span>))</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    og_topics_merged_to_new_topic <span class="op">=</span> <span class="bu">list</span>(<span class="bu">set</span>([</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>        <span class="bu">int</span>(og_topic) </span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> og_topic, new_topic <span class="kw">in</span> <span class="bu">zip</span>(topics, topics_reduced) </span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> new_topic <span class="op">==</span> topic_id</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    ]))</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> og_topic <span class="kw">in</span> og_topics_merged_to_new_topic:</span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(</span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>            <span class="st">"</span><span class="ch">\t</span><span class="st"> - "</span>,</span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>            topic_info.loc[</span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>                topic_info[<span class="st">"Topic"</span>] <span class="op">==</span> og_topic,</span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Name"</span></span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>            ]</span>
-<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>            .item()</span>
-<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>            .replace(<span class="st">"_"</span>, <span class="st">" "</span>)</span>
-<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>        ) </span>
-<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"---"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb25"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> ...</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> 5 <span class="ex">law</span> legal international rights</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span>  -  <span class="ex">66</span> monetary policy inflation exchange</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span>  -  <span class="ex">70</span> contract law contractual subsidy</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span>  -  <span class="ex">46</span> constitutional judge legal council</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span>  -  <span class="ex">22</span> international law european rights</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span>  -  <span class="ex">89</span> financial law tax transactions</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span>  -  <span class="ex">58</span> financial economic banks growth</span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> iRow_reduced, topic_id <span class="kw">in</span> <span class="bu">enumerate</span>(topic_info_reduced[<span class="st">"Topic"</span>]):</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(topic_info_reduced.loc[iRow_reduced, <span class="st">"Name"</span>].replace(<span class="st">"_"</span>, <span class="st">" "</span>))</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    og_topics_merged_to_new_topic <span class="op">=</span> <span class="bu">list</span>(<span class="bu">set</span>([</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>        <span class="bu">int</span>(og_topic) </span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> og_topic, new_topic <span class="kw">in</span> <span class="bu">zip</span>(topics, topics_reduced) </span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> new_topic <span class="op">==</span> topic_id</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    ]))</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> og_topic <span class="kw">in</span> og_topics_merged_to_new_topic:</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>            <span class="st">"</span><span class="ch">\t</span><span class="st"> - "</span>,</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>            topic_info.loc[</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>                topic_info[<span class="st">"Topic"</span>] <span class="op">==</span> og_topic,</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Name"</span></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>            ]</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>            .item()</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>            .replace(<span class="st">"_"</span>, <span class="st">" "</span>)</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>        ) </span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"---"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> ...</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> 5 <span class="ex">law</span> legal international rights</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span>  -  <span class="ex">66</span> monetary policy inflation exchange</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span>  -  <span class="ex">70</span> contract law contractual subsidy</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span>  -  <span class="ex">46</span> constitutional judge legal council</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span>  -  <span class="ex">22</span> international law european rights</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span>  -  <span class="ex">89</span> financial law tax transactions</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span>  -  <span class="ex">58</span> financial economic banks growth</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>In this example we can confidently assess that the merge is coherent as it groups all law related topics into one.</p>
 <p><strong>Explore the reason why a given document was clustered in a specific group</strong></p>
-<p>In our example, we have</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>OAI_REFS <span class="op">=</span> pd.read_csv(<span class="st">"./data/oai_codes.csv"</span>)</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>DS <span class="op">=</span> ds</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_docs_for_oai_code(oai_code : <span class="bu">str</span>):</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>: </span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>        oai_name <span class="op">=</span> OAI_REFS.loc[OAI_REFS[<span class="st">"code"</span>] <span class="op">==</span> oai_code, <span class="st">"name"</span>].item()</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> <span class="pp">Exception</span>:</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"oai code </span><span class="sc">{</span>oai_code<span class="sc">}</span><span class="ss"> invalid"</span>)</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> return_name(codes):</span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> oai_code <span class="kw">in</span> codes: <span class="cf">return</span> oai_name</span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>: <span class="cf">return</span> <span class="st">"Autre"</span></span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>    classes <span class="op">=</span> [return_name(codes) <span class="cf">for</span> codes <span class="kw">in</span> ds[<span class="st">"oai_set_specs"</span>]]</span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>    topics_per_class <span class="op">=</span> topic_model.topics_per_class(docs, classes <span class="op">=</span> classes)</span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>    topics_per_class <span class="op">=</span> topics_per_class.loc[topics_per_class[<span class="st">"Class"</span>] <span class="op">==</span> oai_name, :].set_index(<span class="st">"Topic"</span>)</span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>    topics_name <span class="op">=</span> (</span>
-<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>        topic_model</span>
-<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>        .get_topic_info()</span>
-<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>        .set_index(<span class="st">"Topic"</span>)</span>
-<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>        [<span class="st">"Name"</span>]</span>
-<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>    topics_per_class.loc[:,<span class="st">"Topic Name"</span>] <span class="op">=</span> topics_name</span>
-<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> topics_per_class.loc[topics_per_class[<span class="st">"Class"</span>] <span class="op">==</span> oai_name, :]</span>
-<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>get_docs_for_oai_code(<span class="st">"ddc:000"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The <code>topics_per_class</code> is a powerful method that retrieve top keywords found in specific documents that justify assigning it to a given cluster:</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select a document</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>text_id <span class="op">=</span> <span class="dv">3000</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>is_my_document <span class="op">=</span> [i <span class="op">==</span> text_id <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(docs))]</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Doc n°</span><span class="sc">{</span>text_id<span class="sc">}</span><span class="ss">:</span><span class="ch">\n</span><span class="sc">{</span>docs[text_id]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>topics_per_class <span class="op">=</span> topic_model.topics_per_class(docs, classes <span class="op">=</span> is_my_document)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>topics_per_class <span class="op">=</span> topics_per_class.loc[topics_per_class[<span class="st">"Class"</span>], :].set_index(<span class="st">"Topic"</span>)</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieve the Topic Representation for comparison</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>topics_name <span class="op">=</span> (topic_model.get_topic_info().set_index(<span class="st">"Topic"</span>)[<span class="st">"Name"</span>])</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>topics_per_class.loc[:,<span class="st">"Topic Name"</span>] <span class="op">=</span> topics_name</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(topics_per_class.reset_index().to_markdown())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> Doc <span class="ex">n°3000:</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> The <span class="ex">overall</span> objective of this thesis is to exploit a ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 30%">
+<col style="width: 10%">
+<col style="width: 20%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Topic</th>
+<th style="text-align: left;">Words</th>
+<th style="text-align: right;">Frequency</th>
+<th style="text-align: left;">Class</th>
+<th style="text-align: left;">Topic Name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">social, annotations, multimedia, snapshot, proposed</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">True</td>
+<td style="text-align: left;">3_data_thesis_systems_model</td>
+</tr>
+</tbody>
+</table>
+<p>If you have additional tags, it’s even more powerful as you can check the keywords for a whole class:</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>OAI_REFS <span class="op">=</span> pd.read_csv(<span class="st">"./data/oai_codes.csv"</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>DS <span class="op">=</span> ds</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_docs_for_oai_code(oai_code : <span class="bu">str</span>):</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>: </span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>        oai_name <span class="op">=</span> OAI_REFS.loc[OAI_REFS[<span class="st">"code"</span>] <span class="op">==</span> oai_code, <span class="st">"name"</span>].item()</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> <span class="pp">Exception</span>:</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"oai code </span><span class="sc">{</span>oai_code<span class="sc">}</span><span class="ss"> invalid</span><span class="ch">\n\n</span><span class="ss">Exception:</span><span class="ch">\n</span><span class="sc">{</span><span class="pp">Exception</span><span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> return_name(codes):</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> oai_code <span class="kw">in</span> codes: </span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> oai_name</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>: </span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="st">"Autre"</span></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>    classes <span class="op">=</span> [return_name(codes) <span class="cf">for</span> codes <span class="kw">in</span> ds[<span class="st">"oai_set_specs"</span>]]</span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>    topics_per_class <span class="op">=</span> topic_model.topics_per_class(docs, classes <span class="op">=</span> classes)</span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>    topics_per_class <span class="op">=</span> topics_per_class.loc[topics_per_class[<span class="st">"Class"</span>] <span class="op">==</span> oai_name, :].set_index(<span class="st">"Topic"</span>)</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>    topics_name <span class="op">=</span> (</span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>        topic_model</span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>        .get_topic_info()</span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>        .set_index(<span class="st">"Topic"</span>)</span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>        [<span class="st">"Name"</span>]</span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>    topics_per_class.loc[:,<span class="st">"Topic Name"</span>] <span class="op">=</span> topics_name</span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> topics_per_class.loc[topics_per_class[<span class="st">"Class"</span>] <span class="op">==</span> oai_name, :].reset_index()</span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a>get_docs_for_oai_code(<span class="st">"ddc:300"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 30%">
+<col style="width: 10%">
+<col style="width: 20%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Topic</th>
+<th style="text-align: left;">Words</th>
+<th style="text-align: right;">Frequency</th>
+<th style="text-align: left;">Class</th>
+<th style="text-align: left;">Topic Name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">-1</td>
+<td style="text-align: left;">social, thesis, study, public, political</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: left;">Sciences sociales, sociologie, anthropologie</td>
+<td style="text-align: left;">-1_study_thesis_model_based</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">social, study, thesis, french, analysis</td>
+<td style="text-align: right;">73</td>
+<td style="text-align: left;">Sciences sociales, sociologie, anthropologie</td>
+<td style="text-align: left;">0_study_analysis_social_thesis</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">markov, volatility, smc, stochastic, em</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Sciences sociales, sociologie, anthropologie</td>
+<td style="text-align: left;">3_data_thesis_systems_model</td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="quantitative-evaluation" class="level3">
 <h3 class="anchored" data-anchor-id="quantitative-evaluation">Quantitative evaluation</h3>
@@ -1370,42 +1500,112 @@ Figure&nbsp;9: <strong>XXX</strong>
 </section>
 <section id="good-practices" class="level1">
 <h1>Good practices</h1>
+<p>We list some tips to reduce computation time and facilitate reproducibility.</p>
 <section id="precompute-your-embeddings" class="level2">
 <h2 class="anchored" data-anchor-id="precompute-your-embeddings">Precompute your embeddings</h2>
-<p>Pre-computing the embeddings is a good practice as it will prevent from computing them at each run, but also because it allows you to use a broader spectrum of embedding models that could ne necessarily be used with BERTopic<a href="#fn15" class="footnote-ref" id="fnref15" role="doc-noteref"><sup>15</sup></a>. We retrieve the embeddings and the documents</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>ds <span class="op">=</span> load_from_disk(<span class="st">"path/to/file"</span>)</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>docs <span class="op">=</span> np.array(ds[<span class="ss">f"resumes.en"</span>]) <span class="co"># Number of documents : 6500</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>embeddings <span class="op">=</span> np.array(ds[<span class="st">"embedding"</span>]) <span class="co"># shape : (6500, 768)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>The columns in the dataset are the same as before in addition to an <code>embedding</code> column containing the embeddings of the resumes.</p>
+<p>Pre-computing the embeddings is a good practice as it will prevent from computing them at each run, but also because it allows you to use a broader spectrum of embedding models that could ne necessarily be used with BERTopic. <br> To embed your documents, we use the <a href="https://huggingface.co/docs/datasets/index">datasets</a> objects to bind the embeddings to the documents together:</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datasets <span class="im">import</span> Dataset</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gc <span class="im">import</span> collect <span class="im">as</span> gc_collect</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sentence_transformers <span class="im">import</span> SentenceTransformer</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.cuda <span class="im">import</span> is_available <span class="im">as</span> cuda_available</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.cuda <span class="im">import</span> synchronize, ipc_collect, empty_cache</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>ds <span class="op">=</span> Dataset.load_from_disk(<span class="st">"..."</span>)</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="co"># implement your preprocess and open functions</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>texts : <span class="bu">list</span>[<span class="bu">str</span>] <span class="op">=</span> preprocess(ds[<span class="st">"texts"</span>]) </span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Use GPU if you have one</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>device <span class="op">=</span> <span class="st">"cuda"</span> <span class="cf">if</span> cuda_available() <span class="cf">else</span> <span class="st">"cpu"</span> </span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>sbert_model <span class="op">=</span> SentenceTransformer(</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>    model_name, </span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>    device <span class="op">=</span> device, </span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>    trust_remote_code <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>sbert_model.max_seq_length <span class="op">=</span> <span class="bu">min</span>(</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>    sbert_model.max_seq_length,</span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>    np.inf <span class="co"># Replace with desired window size</span></span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span> : </span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>    embeddings <span class="op">=</span> (</span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a>        sbert_model</span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>        .encode(</span>
+<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>            texts, </span>
+<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a>            device<span class="op">=</span><span class="bu">str</span>(device), </span>
+<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a>            normalize_embeddings<span class="op">=</span><span class="va">True</span>, </span>
+<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a>            show_progress_bar<span class="op">=</span><span class="va">True</span></span>
+<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb28-34"><a href="#cb28-34" aria-hidden="true" tabindex="-1"></a>    ds <span class="op">=</span> ds.add_column(</span>
+<span id="cb28-35"><a href="#cb28-35" aria-hidden="true" tabindex="-1"></a>        <span class="st">"embedding"</span>, </span>
+<span id="cb28-36"><a href="#cb28-36" aria-hidden="true" tabindex="-1"></a>        [</span>
+<span id="cb28-37"><a href="#cb28-37" aria-hidden="true" tabindex="-1"></a>            embeddings[i,:].reshape(<span class="op">-</span><span class="dv">1</span>,) </span>
+<span id="cb28-38"><a href="#cb28-38" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(embeddings.shape[<span class="dv">0</span>])</span>
+<span id="cb28-39"><a href="#cb28-39" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb28-40"><a href="#cb28-40" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb28-41"><a href="#cb28-41" aria-hidden="true" tabindex="-1"></a>    ds.save_to_disk(<span class="st">"embeddings"</span>)</span>
+<span id="cb28-42"><a href="#cb28-42" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">Exception</span>:</span>
+<span id="cb28-43"><a href="#cb28-43" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="pp">Exception</span>)</span>
+<span id="cb28-44"><a href="#cb28-44" aria-hidden="true" tabindex="-1"></a><span class="cf">finally</span>:</span>
+<span id="cb28-45"><a href="#cb28-45" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Make sure to clean your GPU</span></span>
+<span id="cb28-46"><a href="#cb28-46" aria-hidden="true" tabindex="-1"></a>    <span class="kw">del</span> sbert_model, ds</span>
+<span id="cb28-47"><a href="#cb28-47" aria-hidden="true" tabindex="-1"></a>    empty_cache()</span>
+<span id="cb28-48"><a href="#cb28-48" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> cuda_available():</span>
+<span id="cb28-49"><a href="#cb28-49" aria-hidden="true" tabindex="-1"></a>        synchronize()</span>
+<span id="cb28-50"><a href="#cb28-50" aria-hidden="true" tabindex="-1"></a>        ipc_collect()</span>
+<span id="cb28-51"><a href="#cb28-51" aria-hidden="true" tabindex="-1"></a>    gc_collect()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We retrieve the embeddings and the documents</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>ds <span class="op">=</span> load_from_disk(<span class="st">"path/to/file"</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>docs <span class="op">=</span> np.array(ds[<span class="ss">f"texts"</span>]) <span class="co"># Number of documents : 6500</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>embeddings <span class="op">=</span> np.array(ds[<span class="st">"embedding"</span>]) <span class="co"># shape : (6500, 768)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="force-deterministic-behaviour" class="level2">
+<h2 class="anchored" data-anchor-id="force-deterministic-behaviour">Force deterministic behaviour</h2>
+<p>The BERTopic pipeline is deterministic apart from the UMAP component. To force a deterministic:</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>topic_model <span class="op">=</span> BERTopic(</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    ...</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    umap_model<span class="op">=</span> UMAP(</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>        ...</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>        random_state<span class="op">=</span>RANDOM_SEED</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You can also set the random state for Numpy (used by Pandas) with <code>np.random.seed(RANDOM_SEED)</code>.</p>
 </section>
 <section id="save-your-instance-locally" class="level2">
 <h2 class="anchored" data-anchor-id="save-your-instance-locally">Save your instance locally</h2>
-<p>For reproducibility purposes, and more generally, to save your work, BERTopic lets you do that with the <code>save</code> method. Two parameters of importance:</p>
+<p>For reproducibility purposes, and more generally, to save your work, BERTopic lets you do that with the <code>save</code><a href="#fn14" class="footnote-ref" id="fnref14" role="doc-noteref"><sup>14</sup></a> method. Two parameters of importance:</p>
 <ul>
-<li><code>serialization (str)</code>: must be <code>"safetensors"</code>, <code>"pickle"</code> or <code>"pytorch"</code>. We recommend to use <code>"safetensors"</code> or the <code>"pytorch"</code> format as they are broadly used in machine learning and recommended by the <a href="https://maartengr.github.io/BERTopic/api/bertopic.html#bertopic._bertopic.BERTopic.save">BERTopic documentation</a><a href="#fn16" class="footnote-ref" id="fnref16" role="doc-noteref"><sup>16</sup></a>.</li>
+<li><code>serialization (str)</code>: must be <code>"safetensors"</code>, <code>"pickle"</code> or <code>"pytorch"</code>. We recommend to use <code>"safetensors"</code> or the <code>"pytorch"</code> format as they are broadly used in machine learning and recommended by the <a href="https://maartengr.github.io/BERTopic/api/bertopic.html#bertopic._bertopic.BERTopic.save">BERTopic documentation</a><a href="#fn15" class="footnote-ref" id="fnref15" role="doc-noteref"><sup>15</sup></a>.</li>
 <li><code>save_ctfidf (bool)</code> : wether to save the vectorizer configuration or not. This is the heaviest bit (see table below).</li>
 </ul>
-<div class="sourceCode" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ~ 500 KB</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>topic_model.save(</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    path <span class="op">=</span> <span class="st">"./bertopic-default"</span>,</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    serialization <span class="op">=</span> <span class="st">"safetensors"</span>,</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    save_ctfidf <span class="op">=</span> <span class="va">False</span></span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="co"># ~ 6MB</span></span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>topic_model.save(</span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>    path <span class="op">=</span> <span class="st">"./bertopic-default-with-ctfidf"</span>,</span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>    serialization <span class="op">=</span> <span class="st">"safetensors"</span>,</span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>    save_ctfidf <span class="op">=</span> <span class="va">True</span></span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><em>For more information on the content of what’s saved and the size of files.</em></p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ~ 500 KB</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>topic_model.save(</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    path <span class="op">=</span> <span class="st">"./bertopic-default"</span>,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    serialization <span class="op">=</span> <span class="st">"safetensors"</span>,</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    save_ctfidf <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="co"># ~ 6MB</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>topic_model.save(</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>    path <span class="op">=</span> <span class="st">"./bertopic-default-with-ctfidf"</span>,</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>    serialization <span class="op">=</span> <span class="st">"safetensors"</span>,</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>    save_ctfidf <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>The to reload your instance you just need to use the <code>load</code> method:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>topic_model <span class="op">=</span> BERTopic.load(<span class="st">"./bertopic-default"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>topic_model <span class="op">=</span> BERTopic.load(<span class="st">"./bertopic-default"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Saving the instance is a good practice, as we will see below, when reducing the number of topics, the instance is updated and you can’t go back. Hence, we would recommend to save at least one instance — <em>or rerun the whole cell</em>.</p>
 </section>
 </section>
 <section id="bibliography" class="level1">
 <h1>Bibliography</h1>
+<p>Asmussen, C. B., &amp; Møller, C. (2019). Smart literature review : A practical topic modelling approach to exploratory literature review. Journal of Big Data, 6(1), 93. https://doi.org/10.1186/s40537-019-0255-7</p>
+<p>Bizel-Bizellot, G., Galmiche, S., Charmet, T., Coudeville, L., Fontanet, A., &amp; Zimmer, C. (2024). Extracting Circumstances of COVID-19 Transmission from Free Text with Large Language Models. SSRN. https://doi.org/10.2139/ssrn.4819301</p>
+<p>Grootendorst, M. (2022). BERTopic : Neural topic modeling with a class-based TF-IDF procedure (Version 1). arXiv. https://doi.org/10.48550/ARXIV.2203.05794</p>
+<p>Jockers, M. L., &amp; Mimno, D. (2013). Significant themes in 19th-century literature. Poetics, 41(6), 750‑769. https://doi.org/10.1016/j.poetic.2013.08.005</p>
+<p>McInnes, L., Healy, J., &amp; Melville, J. (2018). UMAP : Uniform Manifold Approximation and Projection for Dimension Reduction (Version 3). arXiv. https://doi.org/10.48550/ARXIV.1802.03426</p>
+<p>Stammbach, D., Zouhar, V., Hoyle, A., Sachan, M., &amp; Ash, E. (2023). Revisiting Automated Topic Model Evaluation with Large Language Models. Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing, 9348‑9357. https://doi.org/10.18653/v1/2023.emnlp-main.581</p>
+<p>Törnberg, A., &amp; Törnberg, P. (2025). The aesthetics of climate misinformation : Computational multimodal framing analysis with BERTopic and CLIP. Environmental Politics, 1‑24. https://doi.org/10.1080/09644016.2025.2557684</p>
 
 
 </section>
@@ -1415,21 +1615,20 @@ Figure&nbsp;9: <strong>XXX</strong>
 
 <ol>
 <li id="fn1"><p>the name “transformer models” refers to a specific neural netword designed popularised by Vaswani et al.&nbsp;(2017), most if not all current Language models rely on this architecture.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>You can use online tools as <a href="datalab.sspcloud.fr">Onyxia</a> if <strong>XXX</strong><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3"><p>“Pre-Trained” means that the model has already been trained on millions of documents and perform. “Transformer” is the name of a neural network architecture broadly used in machine learning.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn4"><p>For example, running the topic model with no dimensionality reduction takes about 10 times as much time and generates poor topics.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn5"><p>The UMAP algorithm is very close to the t-SNE algorithm with better scaling capabilities. Another good option for the dimensionality reduction step is the PCA algorithm that will focus on the global structure. PCA is a better choice if you solely focus on the big picture (McInnes et al., 2018, p45).<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn6"><p>Previously, the transformer model worked at the token level.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn7"><p>To be accurate, we count for n-grams: n-grams are sequences of textual entities (tokens or words). In the context of topic modelling, 1-grams would be words, 2-grams would be sequences of 2 words and so on.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn8"><p>Curation can be found <a href="./techy-notes.html#curations-of-the-original-dataset">here</a><a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn9"><p>Disclaimer: You may want to highlight these dimensions to identify hate speech, for instance. Homogeneity has to be relevant to your use case and questioning your corpus is a part of the topic modelling pipeline that should not remain overlooked.<a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn10"><p>Rule of thumb: 1 token = 3 characters<a href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn11"><p>More information on <a href="https://proclusacademy.com/blog/stratified_sampling_pandas/">stratification in Pandas</a><a href="#fnref11" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn12"><p>See the <a href="./techy-notes.html#reduce-outliers-strategies">techy notes</a> for more information on the strategies used to reduce the outliers.<a href="#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn13"><p>The space represented is not necessarily the space used during the clustering step. <code>UMAP(n_dimensions = 2)</code> is run on the embeddings when plotting. Also, because UMAP is non-deterministic, the result may differ from a run to another. This explains why some dots seem far away from their cluster.<a href="#fnref13" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn14"><p>We have seven topics because we asked the topic model to reduce the number of topics to seven.<a href="#fnref14" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn15"><p>Rule of thumb: 1 token = 3 characters<a href="#fnref15" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn16"><p>Disclaimer: You may want to highlight these dimensions to identify hate speech, for instance. Homogeneity has to be relevant to your use case and questioning your corpus is a part of the topic modelling pipeline that should not remain overlooked.<a href="#fnref16" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>“Pre-Trained” means that the model has already been trained on millions of documents. “Transformer” is the name of a neural network architecture broadly used in machine learning.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>The UMAP algorithm is very close to the t-SNE algorithm with better scaling capabilities. Another good option for the dimensionality reduction step is the PCA algorithm that will focus on the global structure. PCA is a better choice if you solely focus on the big picture (McInnes et al., 2018, p45).<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Previously, the transformer model worked at the token level.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>To be accurate, we count for n-grams: n-grams are sequences of textual entities (tokens or words). In the context of topic modelling, 1-grams would be words, 2-grams would be sequences of 2 words and so on.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>Curation can be found <a href="./techy-notes.html#curations-of-the-original-dataset">here</a><a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>Disclaimer: You may want to highlight these dimensions to identify hate speech, for instance. Homogeneity has to be relevant to your use case and questioning your corpus is a part of the topic modelling pipeline that should not remain overlooked.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p>More information on <a href="https://proclusacademy.com/blog/stratified_sampling_pandas/">stratification in Pandas</a><a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn9"><p>See <a href="./techy-notes.html#reduce-outliers-strategies">techy-notes</a> for more information.<a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn10"><p>The space represented is not necessarily the space used during the clustering step. <code>UMAP(n_dimensions = 2)</code> is run on the embeddings when plotting. Also, because UMAP is non-deterministic, the result may differ from a run to another. This explains why some dots seem far away from their cluster.<a href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn11"><p>ie the mean of the document’s embedding inside a cluster.<a href="#fnref11" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn12"><p>There is a small difference in the computation of the graph and the reduce outlier that we do not clearly understand. <a href="https://github.com/MaartenGr/BERTopic/discussions/2453">See Discussion #2453</a>.<a href="#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn13"><p>We have seven topics because we asked the topic model to reduce the number of topics to seven.<a href="#fnref13" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn14"><p>See <a href="./techy-notes.html#instances-file-size-and-content">techy notes</a> for more information on what’s saved and the size of the files.<a href="#fnref14" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn15"><p>Disclaimer: You may want to highlight these dimensions to identify hate speech, for instance. Homogeneity has to be relevant to your use case and questioning your corpus is a part of the topic modelling pipeline that should not remain overlooked.<a href="#fnref15" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
