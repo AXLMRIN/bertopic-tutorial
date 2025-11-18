@@ -183,7 +183,7 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#how-to-generate-the-embeddings" id="toc-how-to-generate-the-embeddings" class="nav-link" data-scroll-target="#how-to-generate-the-embeddings">How to generate the embeddings?</a></li>
   <li><a href="#how-to-generate-clusters" id="toc-how-to-generate-clusters" class="nav-link" data-scroll-target="#how-to-generate-clusters">How to generate clusters</a></li>
-  <li><a href="#how-to-retrieve-relevant-keywords-for-each-topic" id="toc-how-to-retrieve-relevant-keywords-for-each-topic" class="nav-link" data-scroll-target="#how-to-retrieve-relevant-keywords-for-each-topic">How to retrieve relevant keywords for each topic</a></li>
+  <li><a href="#how-to-describe-topics-retrieve-keywords" id="toc-how-to-describe-topics-retrieve-keywords" class="nav-link" data-scroll-target="#how-to-describe-topics-retrieve-keywords">How to describe topics / retrieve keywords</a></li>
   </ul></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   </ul></li>
@@ -196,7 +196,7 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#d-plot" id="toc-d-plot" class="nav-link" data-scroll-target="#d-plot">2D plot</a></li>
   <li><a href="#visualise-top-words-per-topic" id="toc-visualise-top-words-per-topic" class="nav-link" data-scroll-target="#visualise-top-words-per-topic">Visualise top words per topic</a></li>
-  <li><a href="#hierarchical-graphs" id="toc-hierarchical-graphs" class="nav-link" data-scroll-target="#hierarchical-graphs">Hierarchical graphs</a></li>
+  <li><a href="#hierarchical-trees" id="toc-hierarchical-trees" class="nav-link" data-scroll-target="#hierarchical-trees">Hierarchical trees</a></li>
   <li><a href="#additional-visualisations" id="toc-additional-visualisations" class="nav-link" data-scroll-target="#additional-visualisations">Additional visualisations</a></li>
   </ul></li>
   <li><a href="#sec-aggregate-topics" id="toc-sec-aggregate-topics" class="nav-link" data-scroll-target="#sec-aggregate-topics">Aggregate topics</a></li>
@@ -207,7 +207,7 @@ window.Quarto = {
   <li><a href="#quantitative-evaluation" id="toc-quantitative-evaluation" class="nav-link" data-scroll-target="#quantitative-evaluation">Quantitative evaluation</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#good-practices" id="toc-good-practices" class="nav-link" data-scroll-target="#good-practices">Good practices</a>
+  <li><a href="#some-good-practices" id="toc-some-good-practices" class="nav-link" data-scroll-target="#some-good-practices">Some good practices</a>
   <ul class="collapse">
   <li><a href="#precompute-your-embeddings" id="toc-precompute-your-embeddings" class="nav-link" data-scroll-target="#precompute-your-embeddings">Precompute your embeddings</a></li>
   <li><a href="#force-deterministic-behaviour" id="toc-force-deterministic-behaviour" class="nav-link" data-scroll-target="#force-deterministic-behaviour">Force deterministic behaviour</a></li>
@@ -241,7 +241,7 @@ window.Quarto = {
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>What are the main issues adressed in a set of documents ? Are those documents similar or discussing different issues ? What is the most important topic ? Delineating the main topics in a set of documents is a common task in social sciences; especially when working with a new corpus. Of course, identifying the topics can be done by hand. But when dealing with large corpora, this task is almost impossible; hence, for quite some time now, social scientists have used <strong>topic modelling</strong> techniques to quickly extract the main themes in their corpus (Asmussen &amp; Møller, 2019), either to explore them or to attribute a label to each document to conduct further analysis.</p>
+<p>What are the main issues adressed in a set of documents ? Are those documents similar or discussing different issues ? What is the most important topic ? Delineating the main topics in a set of documents is a common task in social sciences; especially when working with a new corpus. Of course, identifying the topics can be done by hand. But when dealing with large corpora, this task is almost impossible without some kind of automation; hence, for quite some time now, social scientists have used <strong>topic modelling</strong> techniques to quickly extract the main themes in their corpus (Asmussen &amp; Møller, 2019), either to explore them or to attribute a label to each document to conduct further analysis.</p>
 <blockquote class="blockquote">
 <p><strong>Topic modelling</strong> is a natural language processing task that extracts latent topics structuring a corpora.<br> <em>For instance, Jockers &amp; Mimno (2013) extracted broad themes in the English literature from the 19th century.</em></p>
 <p><strong>Natural language processing (NLP)</strong> is a subfield of computer science that analyses textual data. Main NLP tasks are text generation (like chatGPT), text classification, or topic modelling.</p>
@@ -257,15 +257,16 @@ Figure&nbsp;1: Topic Modelling in-out sketch
 </figure>
 </div>
 <p>Until recently, topic modelling techniques — and natural language processing (NLP) in general&nbsp;— heavily relied on word counts, especially bag-of-words approaches. Amongst other limits, those approaches do not take into account the context in which a word is used — the order of the words in a sentence does not matter to those models, thus failing to grasp the complexity of the human language.</p>
-<p>To tackle this limit, researchers developed transformations that generate richer and denser representations based on deep learning models. Those models take the text as an entry and generate a vector representation called <strong>embeddings</strong>. BERTopic is a topic model tool designed for Python that leverages transformer models<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> to generate coherent topics based on the semantic similarity of texts. Since its inception in 2022, BERTopic has already proven to be useful in various research across social sciences. <em>For instance, Bizel-Bizellot et al.&nbsp;(2024) used it to identify the main circumstances of infection with COVID-19 based on&nbsp;survey-free-text answers. In the context of climate misinformation, Törnberg &amp; Törnberg (2025) analysed images and texts to highlight trends.</em></p>
-<p>BERTopic is a brilliant tool that unlocks diverse paths but requires time to master. In this tutorial, we focus on its general philosophy and how to use it in a social science project. We will demonstrate how to start with a text corpus and create a topic model that makes sense. As a use case, we will use the database of all the theses defended between 2010 and 2022 in France and create a topic model to describe what keeps French PhD students busy!</p>
+<p>To tackle this limit, researchers developed transformations that generate richer and denser representations based on deep learning models. Those models take the text as an entry and generate a vector representation called <strong>embeddings</strong>. BERTopic is a topic model package written in Python language that leverages embeddings generated by pre-trained transformer models<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> to delineate coherent topics based on the semantic similarity of texts.</p>
+<p>Since its inception in 2022, BERTopic has already proven to be useful in various studies. _For instance, Bizel-Bizellot et al.&nbsp;(2024) used it to analyze survey-free-text answers and identify the main circumstances of infection with COVID-19. In a different field, Törnberg &amp; Törnberg (2025) analysed images and texts to highlight trends regarding misinformation on climate.</p>
+<p>BERTopic is a brilliant tool that unlocks diverse paths but may require some time to master. In this tutorial, we focus on the general philosophy and how to use BERTopic in a social science project. We will demonstrate how to start with a text corpus and create a topic model that makes sense. We will create a topic model of the PhD theses defended between 2010 and 2022 in France to describe what keeps French PhD students busy!</p>
 <p>By the end of this tutorial, you should be able to:</p>
 <ul>
 <li>Get an idea of what you can do with topic modelling in social science</li>
 <li>Set up a topic model on your data and make sense of the results</li>
 <li>Understand each step of the BERTopic pipeline and customise it</li>
 </ul>
-<p>We conclude this tutorial with a discussion about the evaluation of topic modelling and good practices for reproducibility.</p>
+<p>We conclude this tutorial with a discussion about the evaluation of topic modelling and good practices for reproducibility. <!-- I think we need to stay at the discussion level --></p>
 <p><strong>Python, Machine Learning and NLP prerequisites</strong></p>
 <p>We don’t assume that you have any knowledge about NLP and try our best to explain every step in an agnostic manner. We also provide numerous references if you want to dig deeper.</p>
 <p>Nevertheless, you need to have some notions of Python. If you need to refresh your Python skills, you can use <a href="https://pythonds.linogaliana.fr/en/">Lino Galina’s courses</a>. We assume that:</p>
@@ -291,9 +292,9 @@ Note
 <p><strong>Material</strong></p>
 <p>The tutorial comes with some material uploaded on&nbsp;<a href="https://doi.org/10.5281/zenodo.17416954">Zenodo</a>&nbsp;:</p>
 <ul>
-<li>a notebook with all the code</li>
-<li>The original dataset (which can be downloaded&nbsp;<a href="https://www.data.gouv.fr/datasets/theses-soutenues-en-france-depuis-1985/">here</a>).</li>
-<li>A clean dataset with the cleaning code.</li>
+<li>A Jupyter notebook with code to execute</li>
+<li>The original dataset (which can be downloaded&nbsp;<a href="https://www.data.gouv.fr/datasets/theses-soutenues-en-france-depuis-1985/">here</a>)</li>
+<li>A clean dataset with the cleaning code</li>
 </ul>
 </section>
 <section id="understanding-bertopic" class="level1">
@@ -301,7 +302,7 @@ Note
 <section id="the-bertopic-pipeline" class="level2">
 <h2 class="anchored" data-anchor-id="the-bertopic-pipeline">The BERTopic pipeline</h2>
 <p>The BERTopic pipeline takes a list of text documents and returns meaningful topics as well as a mapping from the text documents to the said topics. The goal is to be able to gather documents that are semantically close in clusters and then describe these topics for further interpretation. Once you have a set of topics, you can come back to the corpus to describe its composition.</p>
-<p>Here is a basic usage of BERTopic:</p>
+<p>Here is a basic usage of BERTopic which uses the main methods :</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> bertopic <span class="im">import</span> BERTopic</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Load your documents</span></span>
@@ -335,7 +336,11 @@ Note
 <p>The methods <code>fit</code>, <code>transform</code>, and <code>fit_transform</code> belong to a common syntax in machine learning systematized by Scikit-learn, one of the first and most complete machine learning library in Python. A vanilla model is fitted on the data (parameters are tweaked), and then the model is used to make predictions on new data.</p>
 </div>
 </div>
-<p>The transformation produces two outputs. <br> The <code>topic</code> variable is a list containing integers: for each document, the integer represents the topic/group it belongs to. In our case, <code>topic = [0, 0, 1]</code> as the first 2 documents mention cats, whereas the last document is about the Empire State Building. <br> The <code>probabilities</code> variable is a list of floats: for each document, the float represents how close it is to the topic.</p>
+<p>The transformation produces two outputs.</p>
+<ul>
+<li>The <code>topic</code> variable is a list containing integers: for each document, the integer represents the topic/group it belongs to. In our case, <code>topic = [0, 0, 1]</code> as the first 2 documents mention cats, whereas the last document is about the Empire State Building.</li>
+<li>The <code>probabilities</code> variable is a list of floats: for each document, the float represents how close it is to the topic.</li>
+</ul>
 <p>We can then retrieve topic information that will return keywords that best represent our corpus:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>topic_info <span class="op">=</span> topic_model.get_topic_info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>The <code>topic_info</code> variable is a table like this :</p>
@@ -442,15 +447,15 @@ Figure&nbsp;2: 2D plot of the french theses after tuning the topic model
 </section>
 <section id="breaking-down-the-process" class="level2">
 <h2 class="anchored" data-anchor-id="breaking-down-the-process">Breaking down the process</h2>
-<p>Under the hood, BERTopic does three main steps : <!--  meh does--></p>
+<p>Under the hood, BERTopic does three main steps :</p>
 <ul>
-<li>Generates a mathematical representation that captures the semantic properties of each document —&nbsp;<strong>the embeddings</strong>.</li>
-<li>Based on the embeddings, it will identify groups of documents that are semantically close (this action is called <strong>clustering</strong>). The hope is that these groups represent latent topics of the corpus.</li>
-<li>For each identified topic/group, it will retrieve keywords that best describe the specificity of each topic.</li>
+<li>Generate a mathematical representation of each document that captures the semantic properties —&nbsp;<strong>the embeddings</strong>.</li>
+<li>Based on the embeddings, identify groups of documents that are semantically close (this action is called <strong>clustering</strong>). The hope is that these groups represent latent topics of the corpus.</li>
+<li>For each identified topic/group, retrieve keywords that best describe the specificity of each topic.</li>
 </ul>
 <section id="how-to-generate-the-embeddings" class="level3">
 <h3 class="anchored" data-anchor-id="how-to-generate-the-embeddings">How to generate the embeddings?</h3>
-<p>To generate the embeddings we use encoder models. Encoder models are a type of pre-trained transformer models<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> whose job is to encapsulate the semantic of textual data. A good example of encoder is the BERT model and all it’s successors like RoBERTa, DeBERTa … For generating embeddings, BERTopic uses <strong>SBERT</strong>. Encoder models can take in a limitted number of tokens (parts of words), this is called the <strong>context window size</strong>. For smaller models, the context window size is of about 500 tokens (200 words on average) like for BERT and larger models like ModernBERT have a context window size of 8,000 tokens.</p>
+<p>To generate the embeddings we use <strong>encoder models</strong>. Encoder models are a type of pre-trained transformer models<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> whose job is to encapsulate the semantic of textual data. A good example of encoder is the BERT model and all it’s successors like RoBERTa or DeBERTa. By default, BERTopic uses a packaged called sentence-bert, or <strong>SBERT</strong>, for generating embeddings. <br> Encoder models can take in a limitted number of tokens (parts of words), this is called the <strong>context window size</strong>. For smaller models, the context window size is of about 500 tokens (200 words on average) like for BERT and larger models like ModernBERT have a context window size of 8,000 tokens.</p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Learn more about embedding techniques">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -471,7 +476,7 @@ Learn more about embedding techniques
 </div>
 </div>
 </div>
-<p>The embeddings — ie the generated vectors, contain hundreds of dimensions (for instance, the dimension of BERT’s embeddings is 512). Clustering algorithms work poorly with this many dimensions so we need to reduce the dimensionality of the embedding space (typically between 2 and 10). To reduce the dimensionality, the BERTopic pipeline uses the <strong>UMAP</strong> algorithm for it’s ability to grasp local and global structures (McInnes et al., 2018)<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. This mean that, despite moving from several hundreds of dimensions to only a couple, documents that are close together will stay close and distant ones will stay further apart. This is a critical step as we are heavily changing the structure of the data.</p>
+<p>The embeddings — <em>ie</em> the generated vectors, contain hundreds of dimensions (for instance, the dimension of BERT’s embeddings is 512). Clustering algorithms work poorly with this many dimensions so we need to reduce the dimensionality of the embedding space (typically between 2 and 10). To reduce the dimensionality, the BERTopic pipeline uses the <strong>UMAP</strong> algorithm for it’s ability to grasp local and global structures (McInnes et al., 2018)<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. This mean that, despite moving from several hundreds of dimensions to only a couple, documents that are close together will stay close and distant ones will stay further apart. This is a critical step as we are heavily changing the structure of the data.</p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Learn more about dimensionality reduction and UMAP">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -520,11 +525,11 @@ Learn more about clustering techniques and HDBSCAN
 </div>
 </div>
 </section>
-<section id="how-to-retrieve-relevant-keywords-for-each-topic" class="level3">
-<h3 class="anchored" data-anchor-id="how-to-retrieve-relevant-keywords-for-each-topic">How to retrieve relevant keywords for each topic</h3>
-<p>Once we have created groups of documents, we need to create a meaningful representation with keywords. The general idea in BERTopic is to identify keywords that best describe the specificity of each topic.</p>
-<p>To achieve that, it needs to come back to the text document and discompose it at the word level<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. It uses word-count-based techniques that will count the number of occurrences of each word<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> in each document. However, there are plenty of words we don’t want to count because they do not carry much semantic information (ex: “the”, “I”, “is”, “but”, … ). These words are called stop words and are skipped.</p>
-<p>To do so, we use the <code>CountVectorizer</code> object that will create a word x document matrix.</p>
+<section id="how-to-describe-topics-retrieve-keywords" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-describe-topics-retrieve-keywords">How to describe topics / retrieve keywords</h3>
+<p>Once we have created groups of documents, we need to create a meaningful representation of these topics. The general idea in BERTopic is to identify keywords that best describe the specificity of each topic.</p>
+<p>To achieve that, it needs to come back to all the texts in the cluster and discompose them at the word level<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. It uses word-count-based techniques that will count the number of occurrences of each word<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>. There are different strategies to make this word-count-based representation better. For instance, we can choose to remove stop-words — words that do not carry much semantic information (ex: “the”, “I”, “is”, “but”, … ). Other solutions include lemmatisation of words to consider “cats” and “cat” as one word.</p>
+<p>The idea is to create a word x document matrix. The most basic strategy is to use <code>CountVectorizer</code> object from <code>scikit-learn</code> that will create a word x document matrix.</p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Example">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -582,7 +587,7 @@ Example
 </div>
 </div>
 </div>
-<p>The word x document matrix is never used as is and needs transformation to outline relevant words. The usual transformation is called TF-IDF. This transformation raises the score of words that appear often in a document and decreases the score of words that appear in many documents. In BERTopic, they use an alternative called <strong>c-TF-IDF</strong>. This transformation raises the score of words that appear often in documents of the same group and decreases the score of words appearing in other groups. With this transformation, we retrieve words that make a group unique!</p>
+<p>The <code>word x document</code> matrix is never used as is and needs transformation to outline relevant words. The usual transformation is called TF-IDF. This transformation raises the score of words that appear often in a document and decreases the score of words that appear in many documents. In BERTopic, they use an alternative called <strong>c-TF-IDF</strong>. This transformation raises the score of words that appear often in documents of the same group and decreases the score of words appearing in other groups. With this transformation, we retrieve words that make a group unique!</p>
 <div class="callout callout-style-default callout-tip callout-titled" title="Learn more about bag-of-words and TF-IDF">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -652,7 +657,7 @@ Note
 <p>In our case, the data curation allowed us to extract theses where both the english and french resumes were provided and we will work with resumes in each language separately.</p>
 <p><strong>How long are my documents?</strong></p>
 <p>One need to precisely define their task before diving into topic modelling. What are you trying to analyse? Will this information be available at the sentence level? paragraph level? the document level?</p>
-<p>In our case, the topic of the theses will be described throughout the resume, hence the resumes must be taken as a whole and not subdivided at the sentence level.</p>
+<p>In our case, the topic of the theses will be described throughout the abstract, hence the abstract must be taken as a whole and not subdivided at the sentence level.</p>
 <p>Also, as introduced before, each embedding model has a context window, meaning that long documents will be truncated. One must make sure that the length of the documents in their corpus is smaller than the model’s context window. If the context window is too small consider changing embedding model. Careful though, larger context window means longer computation time and greater computation resources required to run the model.</p>
 <p>We will confirm the length of our documents before calling the embedding model.</p>
 </section>
@@ -666,11 +671,11 @@ Note
 <li><code>CI</code>: Custom index, values are <code>CI-XXXX</code>, with <code>XXXX</code> ranging from 0 to 164,378</li>
 <li><code>year</code>: the year of the defence, values are integers ranging from 2010 to 2022</li>
 <li><code>oai_set_specs</code>: the oai code, each code looks like <code>ddc:XXX</code>, for instance <code>ddc:300</code> refers to <code>Sciences sociales, sociologie, anthropologie</code>.</li>
-<li><code>resumes.en</code> and <code>resumes.fr</code>: the resumes of the thesis, respectively in english and french. We are sure that every row contains a valid resume in the right language thanks to the data curation.</li>
+<li><code>resumes.en</code> and <code>resumes.fr</code>: the abstract of the phd dissertation, respectively in english and french. We are sure that every row contains a valid resume in the right language thanks to the data curation.</li>
 <li><code>titres.en</code> and <code>titres.fr</code>: the titles of the thesis, respectively in english and french. Only 5% of the rows do not have a valid title (french or english). The language of the titles has not been checked because it will only be used to check the qualitative validity of topic model. <a href="google.com">Refer to the notebook to see the code.</a></li>
 <li><code>topics.en</code> and <code>topics.fr</code>: the aggregated topics provided by the author. Only 5% of the rows do not have valid topics (french or english). The language of the topics has not been checked because they will only be used to check the qualitative validity of topic model.</li>
 </ul>
-<p>Let’s take some time to check if our documents fit inside the context window. To retrieve the context window size, you can check the hugging face page of the model or load the config as such:</p>
+<p>Let’s take some time to check if our documents fit inside the context window. To retrieve the context window size, you can check the HuggingFace page of the model or load the configuration file that contains this information as such:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>config <span class="op">=</span> AutoConfig.from_pretrained(model_name, trust_remote_code <span class="op">=</span> <span class="va">True</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Context window size of the model </span><span class="sc">{</span>model_name<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>config<span class="sc">.</span>max_position_embeddings<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Let’s look at two models, <code>sentence-transformers/all-MiniLM-L6-v2</code> (default embedding model in the BERTopic pipeline) and <code>Alibaba-NLP/gte-multilingual-base</code>.</p>
@@ -732,7 +737,7 @@ Note
 </tr>
 </tbody>
 </table>
-<p>With these statistics, we see that we can rule out using <code>sentence-transformers/all-MiniLM-L6-v2</code> because it’s context window is too narrow. By keeping resumes between 1000 and 4000 characters (ie between 300 and 1300 tokens[^7]) we can keep most of the dataset (89%) while maintaining a reasonable computation time.</p>
+<p>With these statistics, we see that we can rule out using <code>sentence-transformers/all-MiniLM-L6-v2</code> because it’s context window is too narrow. By keeping resumes between 1000 and 4000 characters (ie between 300 and 1300 tokens<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a>) we can keep most of the dataset (89%) while maintaining a reasonable computation time.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>valid_index <span class="op">=</span> np.logical_and.<span class="bu">reduce</span>([</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    df_raw[<span class="st">"resumes.fr.len"</span>] <span class="op">&gt;=</span> <span class="dv">1000</span>,</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    df_raw[<span class="st">"resumes.fr.len"</span>] <span class="op">&lt;=</span> <span class="dv">4000</span>,</span>
@@ -741,7 +746,7 @@ Note
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>])</span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df_raw.loc[valid_index,:]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Even if it is more interesting to process the complete dataset, it can be computationally expensive. To limit computation time at least for the exploratory steps, we are going to work on a sample of documents. To maintain some representativeness, we stratify this sampling by the year of the defence<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a>.</p>
+<p>Even if it is more interesting to process the complete dataset, it can be computationally expensive. To limit computation time at least for the exploratory steps, we are going to work on a sample of documents. To maintain some representativeness, we stratify this sampling by the year of the defence<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a>.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>stratification_column <span class="op">=</span> <span class="st">"year"</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>samples_per_stratum <span class="op">=</span> <span class="dv">500</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>df_stratified <span class="op">=</span> (</span>
@@ -772,7 +777,7 @@ Note
 <span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    vectorizer_model <span class="op">=</span> vectorizer_model,</span>
 <span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>topic_model.fit(documents<span class="op">=</span>docs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This snippet of code takes a long time to run (&gt;10 mins) as each element must be embedded first. To avoid unnecessary computation time, we have embedded 6500 elements with several models for the french and english resumes that you can download from <a href="https://doi.org/10.5281/zenodo.17416954">Zenodo</a>. The code changes as such:</p>
+<p>This snippet of code takes a long time to run (&gt;10 mins) as each element must be embedded first. To avoid unnecessary computation time, we have embedded 6500 elements with several models for the French and English abstracts that you can download from <a href="https://doi.org/10.5281/zenodo.17416954">Zenodo</a>. The code changes as such:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>language <span class="op">=</span> <span class="st">"english"</span> <span class="co"># or "french"</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>language_short <span class="op">=</span> language[:<span class="dv">2</span>] <span class="co"># "en" or "fr"</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -888,7 +893,7 @@ Table&nbsp;3: Topic information (truncated) of the french theses for a basic top
 </figure>
 </div>
 <p>The “Representation” column provides the keywords for each topic. We can see that the keywords retrieved for the noise cluster are very generic: “study”, “thesis”, “model”, “analysis”, “approach” and do not convey any meaningful information other than the fact that all documents are academic documents. <br></p>
-<p>For each topic the model retrieves very specific keywords that fit together such as:</p>
+<p>For each topic the model identifies apparently consistent keywords :</p>
 <ul>
 <li>‘mechanical’, ‘numerical’, ‘model’, ‘finite’, ‘element’: this cluster may be grouping theses related to numerical simulation in mechanics using the finite element method.</li>
 <li>‘cells’, ‘cancer’, ‘tumor’, ‘immune’, ‘patients’: this cluster may be grouping theses related to cancer and cures.</li>
@@ -897,7 +902,7 @@ Table&nbsp;3: Topic information (truncated) of the french theses for a basic top
 <p>This is not a proof that our model generated interesting results, for that we need to carry further investigation of each cluster, still this is a first step towards appreciating the quality of the topic model.</p>
 <p>In this table we can see that almost half of the documents are classified as noise (topic -1). This is a normal behaviour of the clustering algorithm as it focuses on dense areas first. This way, the topic model creates representations that focus fewer documents to retrieve very specific keywords. The other 104 topics contain between 10 and 200 documents each, which correspond to 0.1% to 3% of the corpus.</p>
 <p>It is worth noting that the more documents in a cluster, the lower the topic index is.</p>
-<p>It is possible to re-assign clusters to documents clustered as noise with the <code>reduce_outliers</code> method, based on the documentation and the code, we recommend using the <em>“embedding”</em> strategy<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a>:</p>
+<p>It is possible to re-assign clusters to documents clustered as noise with the <code>reduce_outliers</code> method, based on the documentation and the code, we recommend using the <em>“embedding”</em> strategy<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a>:</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>topics_reduced <span class="op">=</span> topic_model.reduce_outliers(</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    documents <span class="op">=</span> docs, </span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    topics <span class="op">=</span> topics, </span>
@@ -942,7 +947,7 @@ Warning
 <img src="./assets/tuto_2d_plot.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-2d-plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4: 2D plot of the french theses for a basic topic model<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a>
+Figure&nbsp;4: 2D plot of the french theses for a basic topic model<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a>
 </figcaption>
 </figure>
 </div>
@@ -970,8 +975,8 @@ Figure&nbsp;5: Top <span class="math inline">\(n\)</span> words per topic of the
 </div>
 <p>Take the topic n°5, we can see keywords like “urban”, “land”, “city”, “local”, “public” and “ecological”. These keywords make sense together and we can imagine theses discussing urban planning at different scales and under different constraints.</p>
 </section>
-<section id="hierarchical-graphs" class="level3">
-<h3 class="anchored" data-anchor-id="hierarchical-graphs">Hierarchical graphs</h3>
+<section id="hierarchical-trees" class="level3">
+<h3 class="anchored" data-anchor-id="hierarchical-trees">Hierarchical trees</h3>
 <p>A good way to visualise how topics interact with each other is to plot a dendogram. This plot is read from left to right, the sooner branches merge, the closer related topics are. We use the <code>visualize_hierarchy</code> method. The graph is very tall but we can easily focus on one subset of the tree at a time.</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> topic_model.visualize_hierarchy()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div id="fig-hierarchical-plot" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -1052,7 +1057,8 @@ Figure&nbsp;8: Number of theses over the years in each group of the french these
 </section>
 <section id="sec-aggregate-topics" class="level2">
 <h2 class="anchored" data-anchor-id="sec-aggregate-topics">Aggregate topics</h2>
-<p>To aggregate topics, the algorithm proposed is to use the topic embeddings<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a>, compute the cosine similarity matrix and use the agglomerative clustering algorithm described <a href="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.AgglomerativeClustering.html">here</a> to aggregate the topics. Once performed, all the documents are moved into a new group and keywords are re-generated. <br> With more than 100 topics, it is difficult to have a general idea of the main latent themes in the corpus. Looking back to the <a href="#fig-hierarchical-plot" class="quarto-xref">Figure&nbsp;6</a><a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a> we can identify seven large branches we could reduce our topic model to.</p>
+<p>To aggregate topics, the algorithm proposed is to use the topic embedding (the mean of the document’s embedding inside a cluster), compute the cosine similarity matrix and use the agglomerative clustering algorithm described <a href="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.AgglomerativeClustering.html">here</a> to aggregate the topics. Once performed, all the documents are moved into a new group and keywords are re-generated.</p>
+<p>With more than 100 topics, it is difficult to have a general idea of the main groups in the corpus. Looking back to the <a href="#fig-hierarchical-plot" class="quarto-xref">Figure&nbsp;6</a><a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a> we can identify seven large branches we could reduce our topic model to.</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>topic_model.reduce_topics(docs <span class="op">=</span> docs, nr_topics<span class="op">=</span><span class="dv">7</span> <span class="op">+</span> <span class="dv">1</span>) <span class="co">#Add one to account for the noise</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Retrieve the updated topics and probabilities</span></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>topics_reduced, probabilities_reduced <span class="op">=</span> topic_model.topics_, topic_model.probabilities_</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1134,7 +1140,8 @@ Table&nbsp;4: Topic information after aggregating topics
 <li>Law, Finance and Policies</li>
 <li>Biochemisty and sensors</li>
 </ul>
-<p>The topics are very general and give us key insights about our corpus. <br> It is important to notice that the very detailed analysis was useful to understand the more general one. For instance, the keywords for the second main topic are too general, but because we analysed our documents in details, we know that this topic is the result of merging “1_mechanical_numerical_behavior” and “3_flow_numerical_fluid”, allowing us to name this topic “Engineering Sciences, Experimentation and Simulation”.</p>
+<p>The topics are very general and give us key insights about our corpus.</p>
+<p>A detailed analysis can be useful to understand the structure of the corpus. For instance, the keywords for the second main topic are too general, but because we analysed our documents in details, we know that this topic is the result of merging “1_mechanical_numerical_behavior” and “3_flow_numerical_fluid”, allowing us to name this topic “Engineering Sciences, Experimentation and Simulation”.</p>
 <p>After reducing outliers, here is the distribution of topics across all out documents :</p>
 <div id="tbl-topics-reduced-stats" class="quarto-float quarto-figure quarto-figure-center anchored" data-tbl-colwidths="[50, 10, 20, 20]">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -1209,13 +1216,13 @@ Table&nbsp;5: Repartition of the theses in the 7 aggregated topics
 </section>
 <section id="sec-tune-parameters" class="level2">
 <h2 class="anchored" data-anchor-id="sec-tune-parameters">Tune parameters</h2>
-<p>In this section, we propose to tune the 3 main parameters outlined by research papers and confirmed by our experience: the embedding model, <code>n_neighbors</code> (UMAP) and <code>n_components</code> (HDBSCAN). A table can be found in the <a href="./techy-notes.html#umap-and-hdbscan-parameter-despcription">techy notes</a> providing descriptions for other parameters.</p>
-<p><strong>1.Assess the quality of the embedding space</strong> (parameters tuned: embedding model)</p>
-<p>The first step is to choose the embedding model as it drastically alters the results of the topic model. To do this, you can embed your documents and plot the 2D map after dimension reduction with UMAP and <code>n_components=2</code>. Then, by exploring the map, you can assess if the embedding space created placed similar documents together or not.</p>
+<p>A diversity of parameters can be used to tune the topic model. In this section, we propose to tune the 3 most useful parameters outlined in the litterature : the embedding model, <code>n_neighbors</code> (UMAP) and <code>n_components</code> (HDBSCAN). A table can be found in the <a href="./techy-notes.html#umap-and-hdbscan-parameter-despcription">techy notes</a> providing descriptions for other parameters.</p>
+<p><strong>1. Assess the quality of the text representations</strong> (parameters tuned: embedding model)</p>
+<p>The primary factor to tune is the embedding model, because it drastically impact the results of the topic model. To check if the embedding makes sense, you can plot the 2D map after dimension reduction with UMAP (<code>n_components=2</code>). Then, by exploring the map, you can assess if the embedding space created placed similar documents together or not.</p>
 <p>At this point you can also try different values for <code>n_neighbors</code> and <code>n_components</code>. However, be aware that the influence of UMAP parameters on the final topic model is difficult to appreciate at first glance.</p>
 <p><strong>Tune the granularity of the topic model</strong> (parameters tuned: <code>n_neighbors</code> and <code>min_cluster_size</code>)</p>
-<p>Once you’ve chosen the embedding model to use, you can change the <code>n_neighbors</code> and <code>min_cluster_size</code>. Both work jointly: the lower these paramters, the smaller grain and more specific the topics.</p>
-<p>To change these parameters, one must create <code>UMAP</code> and <code>HDBSCAN</code> instances and pass them on to the <code>BERTopic</code> model:</p>
+<p>Once you’ve chosen an embedding model, you can change the <code>n_neighbors</code> and <code>min_cluster_size</code>. Both work jointly: the lower these paramters, the smaller grain and more specific the topics.</p>
+<p>To change these parameters, one must explicitly declare <code>UMAP</code> and <code>HDBSCAN</code> objects and pass them on to the <code>BERTopic</code> model:</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load data and create the vectorizer model like before</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>language <span class="op">=</span> <span class="st">"english"</span> <span class="co"># or "french"</span></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>language_short <span class="op">=</span> language[:<span class="dv">2</span>] <span class="co"># "en" or "fr"</span></span>
@@ -1484,12 +1491,13 @@ Figure&nbsp;9: 2D map for a coarse grained topic model
 </section>
 </section>
 </section>
-<section id="good-practices" class="level1">
-<h1>Good practices</h1>
-<p>We list some tips to reduce computation time and facilitate reproducibility.</p>
+<section id="some-good-practices" class="level1">
+<h1>Some good practices</h1>
+<p>Now that you have a good understanding of BERTopic, and you started to experiment with it, you may want more practical advices. Here, we list some tips to reduce computation time and facilitate reproducibility.</p>
 <section id="precompute-your-embeddings" class="level2">
 <h2 class="anchored" data-anchor-id="precompute-your-embeddings">Precompute your embeddings</h2>
-<p>Pre-computing the embeddings is a good practice as it will prevent from computing them at each run, but also because it allows you to use a broader spectrum of embedding models that could ne necessarily be used with BERTopic. <br> To embed your documents, we use the <a href="https://huggingface.co/docs/datasets/index">datasets</a> objects to bind the embeddings to the documents together:</p>
+<p>Pre-computing the embeddings is a good practice as it will prevent from computing them at each run, but also because it allows you to use a broader spectrum of embedding models. This comes handy when you want to test different parameters of clustering and cluster representation. Moreover, saving BERTopics models does not save the embeddings, so it is good practice to manage them separately.</p>
+<p>To embed our documents, we use the <a href="https://huggingface.co/docs/datasets/index">datasets</a> objects to bind the embeddings to the documents together:</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datasets <span class="im">import</span> Dataset</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gc <span class="im">import</span> collect <span class="im">as</span> gc_collect</span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sentence_transformers <span class="im">import</span> SentenceTransformer</span>
@@ -1607,10 +1615,10 @@ Figure&nbsp;9: 2D map for a coarse grained topic model
 <li id="fn5"><p>To be accurate, we count for n-grams: n-grams are sequences of textual entities (tokens or words). In the context of topic modelling, 1-grams would be words, 2-grams would be sequences of 2 words and so on.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn6"><p>Curation can be found <a href="./techy-notes.html#curations-of-the-original-dataset">here</a><a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn7"><p>Disclaimer: You may want to highlight these dimensions to identify hate speech, for instance. Homogeneity has to be relevant to your use case and questioning your corpus is a part of the topic modelling pipeline that should not remain overlooked.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn8"><p>More information on <a href="https://proclusacademy.com/blog/stratified_sampling_pandas/">stratification in Pandas</a><a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn9"><p>See <a href="./techy-notes.html#reduce-outliers-strategies">techy-notes</a> for more information.<a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn10"><p>The space represented is not necessarily the space used during the clustering step. <code>UMAP(n_dimensions = 2)</code> is run on the embeddings when plotting. Also, because UMAP is non-deterministic, the result may differ from a run to another. This explains why some dots seem far away from their cluster.<a href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn11"><p>ie the mean of the document’s embedding inside a cluster.<a href="#fnref11" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p>As a rule of thumb, 1 token = 3 characters<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn9"><p>More information on <a href="https://proclusacademy.com/blog/stratified_sampling_pandas/">stratification in Pandas</a><a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn10"><p>See <a href="./techy-notes.html#reduce-outliers-strategies">techy-notes</a> for more information.<a href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn11"><p>The space represented is not necessarily the space used during the clustering step. <code>UMAP(n_dimensions = 2)</code> is run on the embeddings when plotting. Also, because UMAP is non-deterministic, the result may differ from a run to another. This explains why some dots seem far away from their cluster.<a href="#fnref11" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn12"><p>There is a small difference in the computation of the graph and the reduce outlier that we do not clearly understand. <a href="https://github.com/MaartenGr/BERTopic/discussions/2453">See Discussion #2453</a>.<a href="#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn13"><p>We have seven topics because we asked the topic model to reduce the number of topics to seven.<a href="#fnref13" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn14"><p>See <a href="./techy-notes.html#instances-file-size-and-content">techy notes</a> for more information on what’s saved and the size of the files.<a href="#fnref14" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
