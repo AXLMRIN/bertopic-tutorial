@@ -7,11 +7,11 @@ toc-depth: 3
 
 # Introduction 
 
-What are the main issues adressed in a set of documents ? Are those documents similar or discussing different matters ? What is the most important topic ? Delineating the main themes in a collection of documents is a common task in social sciences, particularly when exploring a new corpus. Although topics can in principle be identified manually, doing so becomes impossible when dealing with large corpora. For this reason, social scientists have long relied on **topic modelling** techniques to quickly extract the main themes present in their corpus, whether for exploratory purposes or to assign a label to individual document to conduct further analysis [[EO: rather Blei & Di Maggio, 2013 https://www.sciencedirect.com/science/article/pii/S0304422X13000661?casa_token=OD5vR9eLtXIAAAAA:bNVHVNtupC_jSiJAJI80-JaDy1Nmw77pyEkeM2ljuChdkvgjeMEyJ1wUi8iJ98W_JRJ2k8LsOHM]].
+What are the main issues adressed in a set of documents ? Are those documents similar or discussing different matters ? What is the most important topic ? Delineating the main themes in a collection of documents is a common task in social sciences, particularly when exploring a new corpus. Although topics can, in principle, be identified manually, doing so becomes impossible when dealing with large corpora. For this reason, social scientists have long relied on **topic modelling** techniques to quickly extract the main themes present in their corpus (Asmussen & Møller, 2019), whether for exploratory purposes or to assign a label to individual document to conduct further analysis [[EO: rather Blei & Di Maggio, 2013 https://www.sciencedirect.com/science/article/pii/S0304422X13000661?casa_token=OD5vR9eLtXIAAAAA:bNVHVNtupC_jSiJAJI80-JaDy1Nmw77pyEkeM2ljuChdkvgjeMEyJ1wUi8iJ98W_JRJ2k8LsOHM]].
 
 > **Topic modelling** is a natural language processing task that extracts latent topics structuring a corpora<br/>
 > _For instance, Jockers & Mimno (2013) extracted broad themes in the English literature from the 19th century._ 
-> Several algorithms can perform this -- for many years, LDA was the method _de choix_, now challenged by embedding based approaches like BERTopic
+> Several algorithms can perform this -- for many years, LDA was the method _de choix_, now challenged by embedding based approaches like BERTopic.
 >
 > **Natural language processing (NLP)** is a subfield of computer science that analyses textual data. Main NLP tasks are text generation (like chatGPT), text classification, or topic modelling.
 
@@ -60,8 +60,9 @@ We provide a detailed requirement file that should work for Linux and MacOS.
 The tutorial comes with some material uploaded on [Zenodo](https://doi.org/10.5281/zenodo.17416954) :
 
 - A Jupyter notebook with code to execute
-- The original dataset (which can be downloaded [here](https://www.data.gouv.fr/datasets/theses-soutenues-en-france-depuis-1985/)) [[EO: l'url est elle stable? Ca me parait bien précaire comme politique de nomination]]
+- The original dataset (which can be downloaded [here](https://www.data.gouv.fr/datasets/theses-soutenues-en-france-depuis-1985/)) 
 - A clean dataset with the cleaning code
+<!-- TODO Verifier stabilité de l'URL, [[EO: l'url est elle stable? Ca me parait bien précaire comme politique de nomination, AM: Je crois que oui, en fait je me suis pas posé la question, dans tous les cas on va stabiliser ça sur Zenodo]] -->
 
 # Understanding BERTopic
 
@@ -96,7 +97,7 @@ topic, probabilities = topic_model.fit_transform(documents)
 
 :::{.callout-note}
 
-The methods  `fit`, `transform`, and `fit_transform` belong to a common syntax in machine learning systematized by Scikit-learn, one of the first and most complete machine learning library in Python[[EO: link to scikit learn]]. A vanilla model is fitted on the data (parameters are tweaked), and then the model is used to make predictions on new data.
+The methods  `fit`, `transform`, and `fit_transform` belong to a common syntax in machine learning systematized by [Scikit-learn](https://scikit-learn.org/stable), one of the first and most complete machine learning library in Python. A vanilla model is fitted on the data (parameters are tweaked), and then the model is used to make predictions on new data.
 
 :::
 
@@ -180,8 +181,10 @@ The embeddings — *ie* the generated vectors, contain hundreds of dimensions (f
 
 ### How to generate clusters
 
-The goal for the clustering algorithm is to create groups of documents that are semantically close. We are not certain that the output clusters will be "real" topics, ie. meaningful. In fact, as it often happens with these methods, some clusters make no sense, some should be merged, other separated. 
+The goal for the clustering algorithm is to create groups of documents that are semantically close. We are not certain that the output clusters will be "real" topics, ie. meaningful. In fact, as it often happens with these methods, some clusters make no sense, some should be merged, other separated.
+<br>
 But our intention is to tune the BERTopic pipeline in order for the clusters to be representatives of topics that are latent in our corpus.
+<!-- NOTE est ce que BERTopic permet de démanteler un groupe? Demander à EO -->
 
 Different algorithms can be used for clustering. **HDBSCAN** was chosen for its ability to detect clusters based on their density, hence it is able to detect clusters of various shapes and density. HDBSCAN also allows for documents to be labeled as noise to primarily focus on dense and coherent groups.
 
@@ -221,7 +224,7 @@ The word x document matrix would be:
 
 :::
 
-In contemporary text analysis, the `word x document` matrix is seldom used. A usual transformation is called TF-IDF, as it gives highlights words that matter. In practice, it gives more importance to words that appear often in a document and decreases the score of words that appear in many documents.
+In contemporary text analysis, the `word x document` matrix is seldom used. A usual transformation is called TF-IDF, as it highlights words that matter most. In practice, it gives more importance to words that appear often in a document and decreases the score of words that appear in many documents.
 BERTopic uses an alternative option called **c-TF-IDF**. This transformation raises the score of words that appear often in documents of the same group and decreases the score of words appearing in other groups. With this transformation, we retrieve words that make a group unique!
 
 :::{.callout-tip collapse="true" title="Learn more about bag-of-words and TF-IDF"}
@@ -235,9 +238,9 @@ BERTopic uses an alternative option called **c-TF-IDF**. This transformation rai
 
 To sum it up we have:
 
-- First, generated embeddings that encapsulate semantic information with **SBERT** and reduced the dimensionality of vectors to a manageable number of dimensions with **UMAP**.
-- Then created groups of semantically proximate documents with **HDBSCAN**. Each group can represent latent topics in our corpus.
-- Created meaningful representations of each topic by counting words in the documents with **CountVectorizer** and outline the most representative words with **c-TF-IDF**.
+- First, generate embeddings that encapsulate semantic information with **SBERT** and reduced the dimensionality of vectors to a manageable number of dimensions with **UMAP**.
+- Then create groups of semantically proximate documents with **HDBSCAN**. Each group can represent latent topics in our corpus.
+- Create meaningful representations of each topic by counting words in the documents with **CountVectorizer** and outline the most representative words with **c-TF-IDF**.
 
 ![The 6 steps of BERTopic [source](https://maartengr.github.io/BERTopic/algorithm/algorithm.html#visual-overview)](./assets/bertopic-general-en.svg){#fig-general-illustration}
 
@@ -386,9 +389,9 @@ topic_model = BERTopic(
 topic_model.fit(documents=docs)
 ```
 
-This snippet of code takes a long time to run (>10 mins), as each element must be embedded first. 
+This snippet of code takes a long time to run (>10 mins) as each element must be embedded first. 
 
-To avoid unnecessary computation time, we have done this embedding, so you can download 6500 elements with several models for the French and English abstracts that you can download from [Zenodo](https://doi.org/10.5281/zenodo.17416954). The code changes as such: 
+To avoid unnecessary computation time, we have embedded 6500 elements with several models for the French and English abstracts that you can download from [Zenodo](https://doi.org/10.5281/zenodo.17416954). The code changes as such: 
 
 ```python
 language = "english" # or "french"
@@ -441,7 +444,7 @@ topic_info
 The "Representation" column provides the keywords for each topic. We can see that the keywords retrieved for the noise cluster are very generic: "study", "thesis", "model", "analysis", "approach" and do not convey any meaningful information other than the fact that all documents are academic documents.
 <br/>
 
-For  other topics, the model identifies apparently consistent keywords : 
+For each topic, the model identifies apparently consistent keywords : 
 
 - 'mechanical', 'numerical', 'model', 'finite', 'element': this cluster may be grouping dissertations related to numerical simulation in mechanics using the finite element method.
 - ‘cells’, ‘cancer’, ‘tumor’, ‘immune’, ‘patients’: this cluster may be grouping dissertations related to cancer and cures.
