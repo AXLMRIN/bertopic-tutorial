@@ -63,7 +63,8 @@ Hence, we need to find metrics that are relevant to the density-based clustering
 
 In our experience, optimising these metrics result in a sub-optimal solutions as illustrated bellow.
 
-_figure to come_
+_figure to come_ 
+<!-- TODO: !!! -->
 
 We don't really recommend using clustering metrics to evaluate your topic model.
 
