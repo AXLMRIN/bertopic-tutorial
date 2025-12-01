@@ -42,7 +42,7 @@ Nevertheless, you will need to have some notions of Python. If you need to refre
 - you have a working environment and can install packages
 - you know the basic syntax of Python (functions, variables, if-statements, for loops) and you're comfortable enough with Pandas to load your documents and proceed to simple manipulations such as creating, dropping and renaming columns and rows.
 
-In this tutorial, we use python 3.12, and you can install the packages we will need with :
+In this tutorial, we use Python 3.12, and you can install the packages we will need with :
 
 ```python
 pip install -U bertopic pandas scikit-learn datasets plotly kaleido stopwordsiso nbformat ipykernel
@@ -142,7 +142,7 @@ In reality, this example would not run because there are not enough documents! L
 {#tbl-final-example tbl-colwidths="[10, 20, 20,50]"}
 
 
-![2D plot of the French theses after tuning the topic model](./assets/2D_final.png){#fig-2d-plot-intro}
+![2D plot of the French theses after tuning the topic model — _grey dots are classified as "noise"; these elements can be reassigned a category as we will describe later_.](./assets/2D_final.png){#fig-2d-plot-intro}
 
 ## Breaking down the process
 
@@ -154,7 +154,7 @@ Under the hood, BERTopic does three main steps:
 
 ### How to generate the embeddings?
 
-To generate the embeddings we use **encoder models**. Encoder models are a type of pre-trained transformer models[^19] whose job is to encapsulate the semantic of textual data. A good example of encoder is the BERT model and all it's successors like RoBERTa or DeBERTa. By default, BERTopic uses a packaged called sentence-bert, or **SBERT**, for generating embeddings. 
+To generate the embeddings we use **encoder models**. Encoder models are a type of pre-trained transformer models[^19] whose job is to encapsulate the semantic of textual data. A good example of encoder is the BERT model and all it's successors like RoBERTa or DeBERTa. By default, BERTopic uses a package called sentence-bert, or **SBERT**, for generating embeddings. 
 <br/>
 Encoder models can take in a limited number of tokens (parts of words), this is called the **context window size**. For smaller models, the context window size is of about 500 tokens (200 words on average) like for BERT and larger models like ModernBERT have a context window size of 8,000 tokens.
 
@@ -199,7 +199,7 @@ Different algorithms can be used for clustering. **HDBSCAN** was chosen for its 
 
 Once we have created groups of documents, we need to create a meaningful representation of these topics. The general idea in BERTopic is to identify keywords that best describe the specificity of each topic.
 
-To achieve that, it needs to come back to all the texts in the cluster and discompose them at the word level[^16]. It uses word-count-based techniques that will count the number of occurrences of each word[^5]. There are different strategies to make this word-count-based representation better. For instance, we can choose to remove stop-words — words that do not carry much semantic information (ex: "the", "I", "is", "but", ... ). Other solutions include lemmatisation of words to consider “cats" and "cat" as one word.
+To achieve that, it needs to come back to all the texts in the cluster and sparse them at the word level[^16]. It uses word-count-based techniques that will count the number of occurrences of each word[^5]. There are different strategies to make this word-count-based representation better. For instance, we can choose to remove stop-words — words that do not carry much semantic information (ex: "the", "I", "is", "but", ... ). Other solutions include lemmatisation of words to consider “cats" and "cat" as one word.
 
 The idea is to create a word x document matrix. The most basic strategy is to use `CountVectorizer` object from `scikit-learn` that will create a word x document matrix.
 
@@ -261,7 +261,7 @@ It is crucial to stress that the preprocessing step is **the most important step
 
 It could be tempting to shove millions of different documents from different sources in a topic model and see what comes out. However, to make sure that the groups will represent topics, one must be sure that your documents are similar in formality, tone, length, density of information etc... If your corpus is too heterogenous, the topic model can highlight these differences and you will lose sight of meaningful latent topics[^6].
 
-In our case, as we analyse dissertation abstracts which are quite standardised, the corpus should be homogenous enough for the topic model to pick up topics and not other semantic dimensions.
+In our case, as we analyse dissertation abstracts which are quite standardised, the corpus should be homogenous enough for the topic model to pick up topics and not other semantic dimensions.  <!-- Yasmine: should be justified better... -->
 
 **Are my documents in the right language?**
 
@@ -271,7 +271,7 @@ In our case, the data curation led us to extract dissertations where both the En
 
 **How long are my documents?**
 
-One need to precisely define their task before diving into topic modelling. What are you trying to analyse? Will this information be available at the sentence level? paragraph level? the document level?
+One needs to precisely define their task before diving into topic modelling. What are you trying to analyse? Will this information be available at the sentence level? paragraph level? the document level?
 
 In our case, the topic of the dissertations will be described throughout the abstract, hence the abstract must be taken as a whole and not subdivided at the sentence level.
 
@@ -294,7 +294,7 @@ The dataset contains the following columns :
 - `CI`: Custom index, values are `CI-XXXX`, with `XXXX` ranging from 0 to 164,378
 - `year`: the year of the defence, values are integers ranging from 2010 to 2022
 - `oai_set_specs`: the oai code, each code looks like `ddc:XXX`, for instance `ddc:300` refers to `Sciences sociales, sociologie, anthropologie`.
-- `resumes.en` and `resumes.fr`: the abstract of the phd dissertation, respectively in English and French. We are sure that every row contains a valid abstract in the right language thanks to the data curation.
+- `resumes.en` and `resumes.fr`: the abstract of the PhD dissertation, respectively in English and French. We are sure that every row contains a valid abstract in the right language thanks to the data curation.
 - `titres.en` and `titres.fr`: the titles of the PhD dissertation, respectively in English and French. Only 5% of the rows do not have a valid title (French or English). The language of the titles has not been checked because it will only be used to check the qualitative validity of topic model.
 <!-- TODO: Make sure that we use the titres.en and topics.en somewhere -->
 - `topics.en` and `topics.fr`: the aggregated topics provided by the author. Only 5% of the rows do not have valid topics (French or English). The language of the topics has not been checked because they will only be used to check the qualitative validity of topic model.
@@ -332,7 +332,7 @@ df_raw.loc[:,["resumes.en.len", "resumes.fr.len"]].describe()
 | mean | 1777       | 1984       |
 | std  | 735        | 802        |
 
-: Descriptive statistics of the length of the abstracts in english and in French {tbl-colwidths="[20,40,40]"}
+: Descriptive statistics of the length of the abstracts in English and in French {tbl-colwidths="[20,40,40]"}
 
 With these statistics, we see that we can rule out using `sentence-transformers/all-MiniLM-L6-v2` because it's context window is too narrow. By keeping abstracts between 1000 and 4000 characters (ie between 300 and 1300 tokens[^7]) we can retain most of the dataset (89%) while maintaining a reasonable computation time.
 
@@ -594,7 +594,7 @@ After reducing outliers, here is the distribution of topics across all out docum
 
 : Repartition of the theses in the 7 aggregated topics {#tbl-topics-reduced-stats tbl-colwidths="[50, 10, 20, 20]"}
 
-Finally, the 7th topic still seem very specific, even after reducing outliers, there are only 31 documents in this topic.
+Finally, the 7th topic still seems very specific, even after reducing outliers, there are only 31 documents in this topic.
 
 :::{.callout-note}
 
@@ -786,7 +786,7 @@ In this example we can confidently assess that the merge is coherent as it group
 
 **Explore the reason why a given document was clustered in a specific group**
 
-The `topics_per_class` is a powerful method that retrieve top keywords found in specific documents that justify assigning it to a given cluster: 
+The `topics_per_class` is a powerful method that retrieves top keywords found in specific documents that justify assigning it to a given cluster: 
 
 ```python 
 # Select a document
