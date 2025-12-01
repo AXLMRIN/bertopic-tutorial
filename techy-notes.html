@@ -355,7 +355,7 @@ Table&nbsp;2: Table X: HDBSCAN Parameters table
 <p>One could choose to focus on evaluating the clustering model to tune the HDBSCAN and UMAP parameters. There exist many metrics for evaluating clustering models that you can find on the <a href="https://scikit-learn.org/stable/modules/clustering.html#clustering-performance-evaluation">scikit-learn website</a>. However, amid the 9 presented, 4 require a ground truth that we don’t have<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>, 3 are ill-suited to HDBSCAN clustering<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> and the two last are good metrics to be optimised.</p>
 <p>Hence, we need to find metrics that are relevant to the density-based clustering models such as the DBCV Index (Moulavi et al., 2014)<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> or the DISCO index (Beer et al., 2025).</p>
 <p>In our experience, optimising these metrics result in a sub-optimal solutions as illustrated bellow.</p>
-<p><em>figure to come</em></p>
+<p><em>figure to come</em> <!-- TODO: !!! --></p>
 <p>We don’t really recommend using clustering metrics to evaluate your topic model.</p>
 </section>
 <section id="coherence-metrics" class="level1">
