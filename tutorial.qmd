@@ -7,7 +7,7 @@ toc-depth: 3
 
 # Introduction 
 
-What are the main issues adressed in a set of documents ? Are those documents similar or discussing different matters ? What is the most important topic ? Delineating the main themes in a collection of documents is a common task in social sciences, particularly when exploring a new corpus. Although topics can, in principle, be identified manually, doing so becomes impossible when dealing with large corpora. For this reason, social scientists have long relied on **topic modelling** techniques to quickly extract the main themes present in their corpus (Asmussen & Møller, 2019), whether for exploratory purposes or to assign a label to individual document to conduct further analysis (DiMaggio et al., 2013).
+What are the main issues addressed in a set of documents? Are those documents similar or discussing different matters? What is the most important topic? Delineating the main themes in a collection of documents is a common task in social sciences, particularly when exploring a new corpus. Although topics can, in principle, be identified manually, doing so becomes impossible when dealing with large corpora. For this reason, social scientists have long relied on **topic modelling** techniques to quickly extract the main themes present in their corpus (Asmussen & Møller, 2019), whether for exploratory purposes or to assign a label to individual document to conduct further analysis (DiMaggio et al., 2013).
 
 > **Topic modelling** is a natural language processing task that extracts latent topics structuring a corpora<br/>
 > _For instance, Jockers & Mimno (2013) extracted broad themes in the English literature from the 19th century._ <br/>
@@ -261,7 +261,7 @@ It is crucial to stress that the preprocessing step is **the most important step
 
 It could be tempting to shove millions of different documents from different sources in a topic model and see what comes out. However, to make sure that the groups will represent topics, one must be sure that your documents are similar in formality, tone, length, density of information etc... If your corpus is too heterogenous, the topic model can highlight these differences and you will lose sight of meaningful latent topics[^6].
 
-In our case, as we analyse dissertation abstracts which are quite standardised, the corpus should be homogenous enough for the topic model to pick up topics and not other semantic dimensions.  <!-- Yasmine: should be justified better... -->
+In our case, as we analyse dissertation abstracts which are quite standardised, the corpus should be homogenous enough for the topic model to pick up topics and not other semantic dimensions. It is worth noting that using the abstracts as a proxy to analyse a corpus of papers is common practice (Ma et al., 2025; Ollion et al., 2025)
 
 **Are my documents in the right language?**
 
@@ -619,7 +619,7 @@ At this point you can also try different values for `n_neighbors` and `n_compone
 
 **Tune the granularity of the topic model** (parameters tuned: `n_neighbors` and `min_cluster_size`)
 
-Once you've chosen an embedding model, you can change the `n_neighbors` and `min_cluster_size`. Both work jointly: the lower these parameters, the smaller the grain and the more specific the topics. 
+Once you've chosen an embedding model, you can change the `n_neighbors` and `min_cluster_size`. Both work jointly: the lower these parameters, the smaller the grain and the more specific the topics. It is worth noting that these parameters are dependant of the size of your corpus. For a corpus of 5,000 documents, `n_neighbors=300` is a large value, but for 50,000 documents it might be a medium value.
 
 To change these parameters, one must explicitly declare `UMAP` and `HDBSCAN` objects and pass them on to the `BERTopic` model:
 
@@ -731,7 +731,7 @@ topic_model.visualize_topics_over_time(topics_over_time, topics = [0,1,2,3])
 
 ![Number of theses over the years in each group of the French theses for a basic topic model](./assets/tuto_temporal_axis.png){#fig-temporal-axis}
 
-# Evaluate your topic model
+# Evaluate your topic model{#sec-evaluate-your-topic-model}
 
 Topic model evaluation is an active domain of research that goes beyond the scope of this tutorial. We propose an overview of the methods that exist and how to quickly tell if your topic model can be used or needs to be refined.
 
@@ -865,7 +865,7 @@ In this section we introduce different metrics that can be used to evaluate your
 There are two types of metrics that you could use:
 
 - Cluster metrics — ie focus on the group-making. There exist a lot of metrics, but few are fit to our situation: unsupervised learning with density based algorithms. In our experience, optimising these metrics results in a sub-optimal solutions as illustrated bellow. [Read more](./techy-notes.qmd#clustering-metrics)
-- Topic representation metrics — ie focus on how relevant the keywords are. Although some metrics exist their utility is limited: good score does not necessarily align with what expert consider good topic models, and they are not good scores to optimise (Stammbach et al., 2023). [Read more](./techy-notes.qmd#coherence-metrics)
+- Topic representation metrics — ie focus on how relevant the keywords are. Although some metrics exist their utility is limited: good score does not necessarily align with what expert consider good topic models, and they are not good scores to optimise (Stammbach et al., 2023). [Read more](./techy-notes.qmd#topic-representation-metrics)
 
 # Some good practices
 
@@ -981,7 +981,15 @@ topic_model = BERTopic(
 
 You can also set the random state for Numpy (used by Pandas) with `np.random.seed(RANDOM_SEED)`.
 
-# Limits of BERTopic and topic modelling in generally
+# Limits of BERTopic and topic modelling in general
+
+Despite the good results we have demonstrated in this tutorial, BERTopic faces some limits. In this section we try to summarise them and highlight valuable resources if you want to investigate.
+
+The first limit BERTopic faces is that it assumes that one document fits in only one category. This assumption may flattend the corpus' complexity; this can, in theory, be mitigated by using HDBSCAN probability matrix to assign multiple topics to one document (Grootendorst, 2022 §7.2)[^27]. On top of that, results can be very dependant of the task and parameters requiring extra tuning and validation time. It is often advised to try different topic model techniques to cross reference your results.
+<br/>
+When comparing BERTopic with LDA, some experiments report BERTopic underperforming (Hoyle et al., 2025; Li et al., 2025) while others highlight BERTopic's capability to highlight different insightful dimensions of their corpus (Egger & Yu, 2022; Ma et al., 2025). These remarks highlight that NLP techniques and pipelines are heavily task-dependant (Egami et al., 2024; Ollion et al., 2023). These remarks further stress the point made in @sec-evaluate-your-topic-model: the only evaluation that must dictate your choice of method, model and parameters is the qualitative evaluation by experts.
+
+Topic models in general also suffer linguistic limitations (Shadrova, 2021)[^28]. From a linguistic perspective, these methods lack conceptualisation and therefore, are difficult to validate and utilise.
 
 # Conclusion
 
@@ -1041,3 +1049,7 @@ Törnberg, A., & Törnberg, P. (2025). The aesthetics of climate misinformation�
 [^25]: See [techy notes](techy-notes.qmd#instances-file-size-and-content) for more information on what's saved and the size of the files.
 
 [^26]: Cosine similarity is a metric bound between 0 and 1 and is a proxy for the semantic distance between two words.
+
+[^27]: We have not found resources to do so.
+
+[^28]: The cited paper addresses topic models' limitations in general but use BoW techniques as a starting point for their analysis (namely LSI, LSA, NMF and LDA).

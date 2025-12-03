@@ -17,7 +17,7 @@ title: "Techy Notes"
 As described in the [documentation](XXX), there are four ways of reducing the number of outliers, ie assigning documents to existing groups. The strategies are listed below
 
 - *"probabilities"*: HDBSCAN can compute (if you set `calculate_probabilities=True`) the probability of each document to belong to each topic. A document is assigned the most likely group, given this definition.
-- *"distributions"*: personne n'a compris **XXX**
+- *"distributions"*: Use the topic distributions, as calculated with `approximate_distribution` to find the most frequent topic in each outlier document.
 - *"c-tf-idf"*: compute the c-TF-IDF representation of each outlier document (ie sparse representation) and assign the document to the group sharing the highest similarity.
 - *"embeddings"*: find the best matching topic using cosine similarity between the outlier document's embedding (dense representation) and the topic centroid (ie the mean of the document's embedding inside a group).
 
@@ -61,14 +61,16 @@ One could choose to focus on evaluating the clustering model to tune the HDBSCAN
 
 Hence, we need to find metrics that are relevant to the density-based clustering models such as the DBCV Index (Moulavi et al., 2014)[^13] or the DISCO index (Beer et al., 2025).
 
-In our experience, optimising these metrics result in a sub-optimal solutions as illustrated bellow.
+In our experience, optimising these metrics results in a sub-optimal solutions as illustrated bellow.
 
 _figure to come_ 
 <!-- TODO: !!! -->
 
 We don't really recommend using clustering metrics to evaluate your topic model.
 
-# Coherence metrics 
+# Topic representation metrics 
+
+Some other metrics assess whether the representations (ie the top $n$ words) are good representations of their groups. These metrics fall into the category of Coherence metrics (Röder et al., 2015) and they rely on a reference corpus to estimate how likely words are to be found together.
 
 # Bibliography
 
