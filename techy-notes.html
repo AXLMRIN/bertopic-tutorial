@@ -146,7 +146,7 @@ window.Quarto = {
   <li><a href="#umap-and-hdbscan-parameter-despcription" id="toc-umap-and-hdbscan-parameter-despcription" class="nav-link" data-scroll-target="#umap-and-hdbscan-parameter-despcription">UMAP and HDBSCAN parameter despcription</a></li>
   <li><a href="#instances-file-size-and-content" id="toc-instances-file-size-and-content" class="nav-link" data-scroll-target="#instances-file-size-and-content">Instances file size and content</a></li>
   <li><a href="#clustering-metrics" id="toc-clustering-metrics" class="nav-link" data-scroll-target="#clustering-metrics">Clustering metrics</a></li>
-  <li><a href="#coherence-metrics" id="toc-coherence-metrics" class="nav-link" data-scroll-target="#coherence-metrics">Coherence metrics</a></li>
+  <li><a href="#topic-representation-metrics" id="toc-topic-representation-metrics" class="nav-link" data-scroll-target="#topic-representation-metrics">Topic representation metrics</a></li>
   <li><a href="#bibliography" id="toc-bibliography" class="nav-link" data-scroll-target="#bibliography">Bibliography</a></li>
   </ul>
 </nav>
@@ -189,7 +189,7 @@ window.Quarto = {
 <p>As described in the <a href="XXX">documentation</a>, there are four ways of reducing the number of outliers, ie assigning documents to existing groups. The strategies are listed below</p>
 <ul>
 <li><em>“probabilities”</em>: HDBSCAN can compute (if you set <code>calculate_probabilities=True</code>) the probability of each document to belong to each topic. A document is assigned the most likely group, given this definition.</li>
-<li><em>“distributions”</em>: personne n’a compris <strong>XXX</strong></li>
+<li><em>“distributions”</em>: Use the topic distributions, as calculated with <code>approximate_distribution</code> to find the most frequent topic in each outlier document.</li>
 <li><em>“c-tf-idf”</em>: compute the c-TF-IDF representation of each outlier document (ie sparse representation) and assign the document to the group sharing the highest similarity.</li>
 <li><em>“embeddings”</em>: find the best matching topic using cosine similarity between the outlier document’s embedding (dense representation) and the topic centroid (ie the mean of the document’s embedding inside a group).</li>
 </ul>
@@ -200,7 +200,7 @@ window.Quarto = {
 <div id="tbl-umap-parameters" class="quarto-float quarto-figure quarto-figure-center anchored" data-tbl-colwidths="[10, 20, 20, 20, 40]">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-umap-parameters-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;1: Table X: UMAP Parameters table
+Table&nbsp;1: UMAP Parameters table
 </figcaption>
 <div aria-describedby="tbl-umap-parameters-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
@@ -257,7 +257,7 @@ Table&nbsp;1: Table X: UMAP Parameters table
 <div id="tbl-hdbscan-parameters" class="quarto-float quarto-figure quarto-figure-center anchored" data-tbl-colwidths="[10, 20, 20, 20, 40]">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-hdbscan-parameters-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;2: Table X: HDBSCAN Parameters table
+Table&nbsp;2: HDBSCAN Parameters table
 </figcaption>
 <div aria-describedby="tbl-hdbscan-parameters-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
@@ -354,17 +354,65 @@ Table&nbsp;2: Table X: HDBSCAN Parameters table
 <h1>Clustering metrics</h1>
 <p>One could choose to focus on evaluating the clustering model to tune the HDBSCAN and UMAP parameters. There exist many metrics for evaluating clustering models that you can find on the <a href="https://scikit-learn.org/stable/modules/clustering.html#clustering-performance-evaluation">scikit-learn website</a>. However, amid the 9 presented, 4 require a ground truth that we don’t have<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>, 3 are ill-suited to HDBSCAN clustering<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> and the two last are good metrics to be optimised.</p>
 <p>Hence, we need to find metrics that are relevant to the density-based clustering models such as the DBCV Index (Moulavi et al., 2014)<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> or the DISCO index (Beer et al., 2025).</p>
-<p>In our experience, optimising these metrics result in a sub-optimal solutions as illustrated bellow.</p>
-<p><em>figure to come</em> <!-- TODO: !!! --></p>
+<p>In our experience, optimising these metrics results in a sub-optimal solutions as illustrated bellow.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/clustering_metrics-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/clustering_metrics-2.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/clustering_metrics-3.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
 <p>We don’t really recommend using clustering metrics to evaluate your topic model.</p>
 </section>
-<section id="coherence-metrics" class="level1">
-<h1>Coherence metrics</h1>
+<section id="topic-representation-metrics" class="level1">
+<h1>Topic representation metrics</h1>
+<p>Some other metrics assess whether the representations (ie the top <span class="math inline">\(n\)</span> words) are good representations of their groups. These metrics fall into the category of Coherence metrics (Röder et al., 2015) and they rely on a reference corpus to estimate how likely words are to be found together. Multiple metrics exist such as <span class="math inline">\(C_{UCI}\)</span>, <span class="math inline">\(C_{UMass}\)</span> or <span class="math inline">\(C_V\)</span>, and differ from their formulation, but all follow the same structure depicted in <a href="#fig-coherene-framework" class="quarto-xref">Figure&nbsp;1</a>. This framework includes a “Reference Corpus” to evaluate the probability of two words appearing together. <br> These scores were often used to optimise the number of topics for LDA techniques but not to compare two topic models</p>
+<div id="fig-coherene-framework" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-coherene-framework-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./assets/coherence_metrics.png" class="img-fluid quarto-figure quarto-figure-center figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-coherene-framework-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: “Figure 1: Overview over the unifying coherence framework&nbsp;— its four parts and their intermediate results.” (Röder et al., 2015)
+</figcaption>
+</figure>
+</div>
+<p>If you wanted to implement them, an easy way around is to use the <a href="https://radimrehurek.com/gensim/auto_examples/index.html#documentation">Gensim</a> library and the <a href="https://radimrehurek.com/gensim/models/coherencemodel.html">CoherenceModel</a> object. For reference, we provide some examples of topic models and evaluation, we have not qualitatively evaluated these topic models, apart from <a href="#fig-coherence-metrics-2" class="quarto-xref">Figure&nbsp;2</a> which is presented in <a href="./tutorial.html#tune-parameters">Section 4.2</a>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/coherence_metrics-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+<div id="fig-coherence-metrics-2" class="quarto-float quarto-figure quarto-figure-center anchored" width="100%," data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-coherence-metrics-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./assets/coherence_metrics-2.png" id="fig-coherence-metrics-2" class="img-fluid quarto-figure quarto-figure-center anchored figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-coherence-metrics-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2
+</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./assets/coherence_metrics-3.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
 </section>
 <section id="bibliography" class="level1">
 <h1>Bibliography</h1>
 <p>Beer, A., Krieger, L., Weber, P., Ritzert, M., Assent, I., &amp; Plant, C. (2025). DISCO : Internal Evaluation of Density-Based Clustering (No.&nbsp;arXiv:2503.00127). arXiv. https://doi.org/10.48550/arXiv.2503.00127</p>
+<p>Campello, R. J. G. B., Moulavi, D., &amp; Sander, J. (2013). Density-Based Clustering Based on Hierarchical Density Estimates. Dans J. Pei, V. S. Tseng, L. Cao, H. Motoda, &amp; G. Xu (Éds.), Advances in Knowledge Discovery and Data Mining (Vol. 7819, p.&nbsp;160‑172). Springer Berlin Heidelberg. https://doi.org/10.1007/978-3-642-37456-2_14</p>
 <p>Moulavi, D., Jaskowiak, P. A., Campello, R. J. G. B., Zimek, A., &amp; Sander, J. (2014). Density-Based Clustering Validation. Proceedings of the 2014 SIAM International Conference on Data Mining, 839‑847. https://doi.org/10.1137/1.9781611973440.96</p>
+<p>Röder, M., Both, A., &amp; Hinneburg, A. (2015). Exploring the Space of Topic Coherence Measures. Proceedings of the Eighth ACM International Conference on Web Search and Data Mining, 399‑408. https://doi.org/10.1145/2684822.2685324</p>
 
 
 </section>

@@ -205,7 +205,7 @@ window.Quarto = {
   <li><a href="#sec-tune-parameters" id="toc-sec-tune-parameters" class="nav-link" data-scroll-target="#sec-tune-parameters">Tune parameters</a></li>
   <li><a href="#sec-additional-visualisations" id="toc-sec-additional-visualisations" class="nav-link" data-scroll-target="#sec-additional-visualisations">Additional visualisations: cross-reference with additional tags</a></li>
   </ul></li>
-  <li><a href="#evaluate-your-topic-model" id="toc-evaluate-your-topic-model" class="nav-link" data-scroll-target="#evaluate-your-topic-model">Evaluate your topic model</a>
+  <li><a href="#sec-evaluate-your-topic-model" id="toc-sec-evaluate-your-topic-model" class="nav-link" data-scroll-target="#sec-evaluate-your-topic-model">Evaluate your topic model</a>
   <ul class="collapse">
   <li><a href="#qualitative-evaluation" id="toc-qualitative-evaluation" class="nav-link" data-scroll-target="#qualitative-evaluation">Qualitative evaluation</a></li>
   <li><a href="#quantitative-evaluation" id="toc-quantitative-evaluation" class="nav-link" data-scroll-target="#quantitative-evaluation">Quantitative evaluation</a></li>
@@ -216,7 +216,7 @@ window.Quarto = {
   <li><a href="#precompute-your-embeddings" id="toc-precompute-your-embeddings" class="nav-link" data-scroll-target="#precompute-your-embeddings">Precompute your embeddings</a></li>
   <li><a href="#force-deterministic-behaviour" id="toc-force-deterministic-behaviour" class="nav-link" data-scroll-target="#force-deterministic-behaviour">Force deterministic behaviour</a></li>
   </ul></li>
-  <li><a href="#limits-of-bertopic-and-topic-modelling-in-generally" id="toc-limits-of-bertopic-and-topic-modelling-in-generally" class="nav-link" data-scroll-target="#limits-of-bertopic-and-topic-modelling-in-generally">Limits of BERTopic and topic modelling in generally</a></li>
+  <li><a href="#limits-of-bertopic-and-topic-modelling-in-general" id="toc-limits-of-bertopic-and-topic-modelling-in-general" class="nav-link" data-scroll-target="#limits-of-bertopic-and-topic-modelling-in-general">Limits of BERTopic and topic modelling in general</a></li>
   <li><a href="#conclusion-1" id="toc-conclusion-1" class="nav-link" data-scroll-target="#conclusion-1">Conclusion</a></li>
   <li><a href="#bibliography" id="toc-bibliography" class="nav-link" data-scroll-target="#bibliography">Bibliography</a></li>
   </ul>
@@ -246,7 +246,7 @@ window.Quarto = {
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>What are the main issues adressed in a set of documents ? Are those documents similar or discussing different matters ? What is the most important topic ? Delineating the main themes in a collection of documents is a common task in social sciences, particularly when exploring a new corpus. Although topics can, in principle, be identified manually, doing so becomes impossible when dealing with large corpora. For this reason, social scientists have long relied on <strong>topic modelling</strong> techniques to quickly extract the main themes present in their corpus (Asmussen &amp; Møller, 2019), whether for exploratory purposes or to assign a label to individual document to conduct further analysis (DiMaggio et al., 2013).</p>
+<p>What are the main issues addressed in a set of documents? Are those documents similar or discussing different matters? What is the most important topic? Delineating the main themes in a collection of documents is a common task in social sciences, particularly when exploring a new corpus. Although topics can, in principle, be identified manually, doing so becomes impossible when dealing with large corpora. For this reason, social scientists have long relied on <strong>topic modelling</strong> techniques to quickly extract the main themes present in their corpus (Asmussen &amp; Møller, 2019), whether for exploratory purposes or to assign a label to individual document to conduct further analysis (DiMaggio et al., 2013).</p>
 <blockquote class="blockquote">
 <p><strong>Topic modelling</strong> is a natural language processing task that extracts latent topics structuring a corpora<br> <em>For instance, Jockers &amp; Mimno (2013) extracted broad themes in the English literature from the 19th century.</em> <br> Several algorithms can perform this – for many years, <a href="https://radimrehurek.com/gensim/auto_examples/tutorials/run_lda.html">LDA</a> was the method <em>de choix</em>, now challenged by embedding based approaches like BERTopic.</p>
 <p><strong>Natural language processing (NLP)</strong> is a subfield of computer science that analyses textual data. Main NLP tasks are text generation (like chatGPT), text classification, or topic modelling.</p>
@@ -691,7 +691,7 @@ Note
 <p>It is crucial to stress that the preprocessing step is <strong>the most important step</strong>. Although we can tune the topic model towards meaningful clusters and representations, your corpus is your input and no model will generate good results out of poor inputs. We list a number of questions you need to consider and justify for your topic model to be relevant:</p>
 <p><strong>Is my corpus homogenous enough ?</strong></p>
 <p>It could be tempting to shove millions of different documents from different sources in a topic model and see what comes out. However, to make sure that the groups will represent topics, one must be sure that your documents are similar in formality, tone, length, density of information etc… If your corpus is too heterogenous, the topic model can highlight these differences and you will lose sight of meaningful latent topics<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>.</p>
-<p>In our case, as we analyse dissertation abstracts which are quite standardised, the corpus should be homogenous enough for the topic model to pick up topics and not other semantic dimensions. <!-- Yasmine: should be justified better... --></p>
+<p>In our case, as we analyse dissertation abstracts which are quite standardised, the corpus should be homogenous enough for the topic model to pick up topics and not other semantic dimensions. It is worth noting that using the abstracts as a proxy to analyse a corpus of papers is common practice (Ma et al., 2025; Ollion et al., 2025)</p>
 <p><strong>Are my documents in the right language?</strong></p>
 <p>Most of the time, language models are trained in a single language. Some models are called multi-lingual and accept texts in more than one language. However, in our experience, working with documents in different languages generates poor topics as the language shift holds for the most salient difference and each language is clustered by itself. We recommend translating your documents in a single language beforehand.</p>
 <p>In our case, the data curation led us to extract dissertations where both the English and the French abstracts were provided and we will work with abstracts in each language separately.</p>
@@ -1218,7 +1218,7 @@ Note
 <p>The primary factor to tune is the embedding model, because it drastically impacts the results of the topic model. To check if the embedding makes sense, you can plot the 2D map after dimension reduction with UMAP (<code>n_components=2</code>). Then, by exploring the map, you can assess if the embedding space created placed similar documents together or not.</p>
 <p>At this point you can also try different values for <code>n_neighbors</code> and <code>n_components</code>. However, be aware that the influence of UMAP parameters on the final topic model is difficult to appreciate at first glance.</p>
 <p><strong>Tune the granularity of the topic model</strong> (parameters tuned: <code>n_neighbors</code> and <code>min_cluster_size</code>)</p>
-<p>Once you’ve chosen an embedding model, you can change the <code>n_neighbors</code> and <code>min_cluster_size</code>. Both work jointly: the lower these parameters, the smaller the grain and the more specific the topics.</p>
+<p>Once you’ve chosen an embedding model, you can change the <code>n_neighbors</code> and <code>min_cluster_size</code>. Both work jointly: the lower these parameters, the smaller the grain and the more specific the topics. It is worth noting that these parameters are dependant of the size of your corpus. For a corpus of 5,000 documents, <code>n_neighbors=300</code> is a large value, but for 50,000 documents it might be a medium value.</p>
 <p>To change these parameters, one must explicitly declare <code>UMAP</code> and <code>HDBSCAN</code> objects and pass them on to the <code>BERTopic</code> model:</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load data and create the vectorizer model like before</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>language <span class="op">=</span> <span class="st">"english"</span> <span class="co"># or "french"</span></span>
@@ -1385,7 +1385,7 @@ Figure&nbsp;9: Number of theses over the years in each group of the French these
 </div>
 </section>
 </section>
-<section id="evaluate-your-topic-model" class="level1">
+<section id="sec-evaluate-your-topic-model" class="level1">
 <h1>Evaluate your topic model</h1>
 <p>Topic model evaluation is an active domain of research that goes beyond the scope of this tutorial. We propose an overview of the methods that exist and how to quickly tell if your topic model can be used or needs to be refined.</p>
 <p>In short: quantitative methods are impractical and one should focus more on the qualitative evaluation.</p>
@@ -1547,7 +1547,7 @@ Figure&nbsp;9: Number of theses over the years in each group of the French these
 <p>There are two types of metrics that you could use:</p>
 <ul>
 <li>Cluster metrics&nbsp;— ie focus on the group-making. There exist a lot of metrics, but few are fit to our situation: unsupervised learning with density based algorithms. In our experience, optimising these metrics results in a sub-optimal solutions as illustrated bellow. <a href="./techy-notes.html#clustering-metrics">Read more</a></li>
-<li>Topic representation metrics — ie focus on how relevant the keywords are. Although some metrics exist their utility is limited: good score does not necessarily align with what expert consider good topic models, and they are not good scores to optimise (Stammbach et al., 2023). <a href="./techy-notes.html#coherence-metrics">Read more</a></li>
+<li>Topic representation metrics — ie focus on how relevant the keywords are. Although some metrics exist their utility is limited: good score does not necessarily align with what expert consider good topic models, and they are not good scores to optimise (Stammbach et al., 2023). <a href="./techy-notes.html#topic-representation-metrics">Read more</a></li>
 </ul>
 </section>
 </section>
@@ -1645,8 +1645,11 @@ Figure&nbsp;9: Number of theses over the years in each group of the French these
 <p>You can also set the random state for Numpy (used by Pandas) with <code>np.random.seed(RANDOM_SEED)</code>.</p>
 </section>
 </section>
-<section id="limits-of-bertopic-and-topic-modelling-in-generally" class="level1">
-<h1>Limits of BERTopic and topic modelling in generally</h1>
+<section id="limits-of-bertopic-and-topic-modelling-in-general" class="level1">
+<h1>Limits of BERTopic and topic modelling in general</h1>
+<p>Despite the good results we have demonstrated in this tutorial, BERTopic faces some limits. In this section we try to summarise them and highlight valuable resources if you want to investigate.</p>
+<p>The first limit BERTopic faces is that it assumes that one document fits in only one category. This assumption may flattend the corpus’ complexity; this can, in theory, be mitigated by using HDBSCAN probability matrix to assign multiple topics to one document (Grootendorst, 2022 §7.2)<a href="#fn17" class="footnote-ref" id="fnref17" role="doc-noteref"><sup>17</sup></a>. On top of that, results can be very dependant of the task and parameters requiring extra tuning and validation time. It is often advised to try different topic model techniques to cross reference your results. <br> When comparing BERTopic with LDA, some experiments report BERTopic underperforming (Hoyle et al., 2025; Li et al., 2025) while others highlight BERTopic’s capability to highlight different insightful dimensions of their corpus (Egger &amp; Yu, 2022; Ma et al., 2025). These remarks highlight that NLP techniques and pipelines are heavily task-dependant (Egami et al., 2024; Ollion et al., 2023). These remarks further stress the point made in <a href="#sec-evaluate-your-topic-model" class="quarto-xref">Section&nbsp;5</a>: the only evaluation that must dictate your choice of method, model and parameters is the qualitative evaluation by experts.</p>
+<p>Topic models in general also suffer linguistic limitations (Shadrova, 2021)<a href="#fn18" class="footnote-ref" id="fnref18" role="doc-noteref"><sup>18</sup></a>. From a linguistic perspective, these methods lack conceptualisation and therefore, are difficult to validate and utilise.</p>
 </section>
 <section id="conclusion-1" class="level1">
 <h1>Conclusion</h1>
@@ -1664,9 +1667,16 @@ Figure&nbsp;9: Number of theses over the years in each group of the French these
 <p>Asmussen, C. B., &amp; Møller, C. (2019). Smart literature review : A practical topic modelling approach to exploratory literature review. Journal of Big Data, 6(1), 93. https://doi.org/10.1186/s40537-019-0255-7</p>
 <p>Bizel-Bizellot, G., Galmiche, S., Charmet, T., Coudeville, L., Fontanet, A., &amp; Zimmer, C. (2024). Extracting Circumstances of COVID-19 Transmission from Free Text with Large Language Models. SSRN. https://doi.org/10.2139/ssrn.4819301</p>
 <p>DiMaggio, P., Nag, M., &amp; Blei, D. (2013). Exploiting affinities between topic modeling and the sociological perspective on culture : Application to newspaper coverage of U.S. government arts funding. Poetics, 41(6), 570‑606. https://doi.org/10.1016/j.poetic.2013.08.004</p>
+<p>Egami, N., Hinck, M., Stewart, B. M., &amp; Wei, H. (2024). Using Large Language Model Annotations for the Social Sciences : A General Framework of Using Predicted Variables in Downstream Analyses.</p>
 <p>Grootendorst, M. (2022). BERTopic : Neural topic modeling with a class-based TF-IDF procedure (Version 1). arXiv. https://doi.org/10.48550/ARXIV.2203.05794</p>
+<p>Hoyle, A., Calvo-Bartolomé, L., Boyd-Graber, J., &amp; Resnik, P. (2025). PROXANN: Use-Oriented Evaluations of Topic Models and Document Clustering.</p>
 <p>Jockers, M. L., &amp; Mimno, D. (2013). Significant themes in 19th-century literature. Poetics, 41(6), 750‑769. https://doi.org/10.1016/j.poetic.2013.08.005</p>
+<p>Li, Z., Calvo-Bartolomé, L., Hoyle, A., Xu, P., Stephens, D., Dima, A., Fung, J. F., &amp; Boyd-Graber, J. (2025). Large Language Models Struggle to Describe the Haystack without Human Help : A Social Science-Inspired Evaluation of Topic Models.</p>
+<p>Ma, L., Chen, R., Ge, W., Rogers, P., Lyn-Cook, B., Hong, H., Tong, W., Wu, N., &amp; Zou, W. (2025). AI-powered topic modeling : Comparing LDA and BERTopic in analyzing opioid-related cardiovascular risks in women. Experimental Biology and Medicine, 250, 10389. https://doi.org/10.3389/ebm.2025.10389</p>
 <p>McInnes, L., Healy, J., &amp; Melville, J. (2018). UMAP : Uniform Manifold Approximation and Projection for Dimension Reduction (Version 3). arXiv. https://doi.org/10.48550/ARXIV.1802.03426</p>
+<p>Ollion, E., Shen, R., Macanovic, A., &amp; Chatelain, A. (2023). ChatGPT for Text Annotation? Mind the Hype! SocArXiv. https://doi.org/10.31235/osf.io/x58kn</p>
+<p>Ollion, E., Boelaert, J., Coavoux, S., Delaine, E., Desprès, A., Gollac, S., Keyhani, N., &amp; Mommeja, A. (2025). La part du genre. Genre et approche intersectionnelle dans les sciences sociales françaises au XXIe siècle. https://doi.org/10.31235/osf.io/qamux_v2</p>
+<p>Shadrova, A. (2021). Topic models do not model topics : Epistemological remarks and steps towards best practices. Journal of Data Mining &amp; Digital Humanities, 2021, 7595. https://doi.org/10.46298/jdmdh.7595</p>
 <p>Stammbach, D., Zouhar, V., Hoyle, A., Sachan, M., &amp; Ash, E. (2023). Revisiting Automated Topic Model Evaluation with Large Language Models. Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing, 9348‑9357. https://doi.org/10.18653/v1/2023.emnlp-main.581</p>
 <p>Törnberg, A., &amp; Törnberg, P. (2025). The aesthetics of climate misinformation : Computational multimodal framing analysis with BERTopic and CLIP. Environmental Politics, 1‑24. https://doi.org/10.1080/09644016.2025.2557684</p>
 
@@ -1693,6 +1703,8 @@ Figure&nbsp;9: Number of theses over the years in each group of the French these
 <li id="fn14"><p>We have seven topics because we asked the topic model to reduce the number of topics to seven.<a href="#fnref14" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn15"><p>See <a href="./techy-notes.html#instances-file-size-and-content">techy notes</a> for more information on what’s saved and the size of the files.<a href="#fnref15" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn16"><p>Disclaimer: You may want to highlight these dimensions to identify hate speech, for instance. Homogeneity has to be relevant to your use case and questioning your corpus is a part of the topic modelling pipeline that should not remain overlooked.<a href="#fnref16" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn17"><p>We have not found resources to do so.<a href="#fnref17" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn18"><p>The cited paper addresses topic models’ limitations in general but use BoW techniques as a starting point for their analysis (namely LSI, LSA, NMF and LDA).<a href="#fnref18" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
