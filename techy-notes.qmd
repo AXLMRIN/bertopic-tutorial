@@ -33,7 +33,7 @@ We recommend using the *"embeddings"* as using embeddings offer the richest repr
 |`n_components`<br/>*default 5*|Defines the number of dimensions of the output space.|Maintain richer representations.|Flatten the representations.|Start with `n_components=5`.<br/>Increase when the topic model does not grasp semantic subtelties<br/>Decrease when the topic model focuses on non-essential disparities of your corpus.| 
 |`metrics`<br/>*default cosine*|This parameter defines the metric used to quantify the similarity between 2 vectors|||For NLP tasks, we use the cosine metric|
 
-: Table X: UMAP Parameters table {#tbl-umap-parameters tbl-colwidths="[10, 20, 20, 20, 40]"}
+: UMAP Parameters table {#tbl-umap-parameters tbl-colwidths="[10, 20, 20, 20, 40]"}
 
 |Parameter  | Description | Increase | Decrease |Recommendations
 |---:|:--- |:--- |:---|:---|
@@ -41,7 +41,7 @@ We recommend using the *"embeddings"* as using embeddings offer the richest repr
 |`min_samples`<br/>*default None*|The number of samples in a neighbourhood for a point to be considered as a core point|The algorithm is conservative, only large groups will remain.|Allow for small groups.|In our experience, tuning `min_cluster_size` and leaving `min_samples = min_cluster_size` is enough for most cases[^21].|
 |`metrics`<br/>*default eucidean*|This parameter defines the metric used to quantify the distance between 2 docs|||The metric should not me switched to `cosine` because we are not working in the embedding space anymore.|
 
-: Table X: HDBSCAN Parameters table {#tbl-hdbscan-parameters tbl-colwidths="[10, 20, 20, 20, 40]"}
+: HDBSCAN Parameters table {#tbl-hdbscan-parameters tbl-colwidths="[10, 20, 20, 20, 40]"}
 
 # Instances file size and content
 
@@ -63,8 +63,11 @@ Hence, we need to find metrics that are relevant to the density-based clustering
 
 In our experience, optimising these metrics results in a sub-optimal solutions as illustrated bellow.
 
-_figure to come_ 
-<!-- TODO: !!! -->
+![](./assets/clustering_metrics-1.png){height=400px, fig-align="center"}
+
+![](./assets/clustering_metrics-2.png){height=400px, fig-align="center"}
+
+![](./assets/clustering_metrics-3.png){height=400px, fig-align="center"}
 
 We don't really recommend using clustering metrics to evaluate your topic model.
 
@@ -76,7 +79,11 @@ Some other metrics assess whether the representations (ie the top $n$ words) are
 
 Beer, A., Krieger, L., Weber, P., Ritzert, M., Assent, I., & Plant, C. (2025). DISCO : Internal Evaluation of Density-Based Clustering (No. arXiv:2503.00127). arXiv. https://doi.org/10.48550/arXiv.2503.00127
 
+Campello, R. J. G. B., Moulavi, D., & Sander, J. (2013). Density-Based Clustering Based on Hierarchical Density Estimates. Dans J. Pei, V. S. Tseng, L. Cao, H. Motoda, & G. Xu (Éds.), Advances in Knowledge Discovery and Data Mining (Vol. 7819, p. 160‑172). Springer Berlin Heidelberg. https://doi.org/10.1007/978-3-642-37456-2_14
+
 Moulavi, D., Jaskowiak, P. A., Campello, R. J. G. B., Zimek, A., & Sander, J. (2014). Density-Based Clustering Validation. Proceedings of the 2014 SIAM International Conference on Data Mining, 839‑847. https://doi.org/10.1137/1.9781611973440.96
+
+Röder, M., Both, A., & Hinneburg, A. (2015). Exploring the Space of Topic Coherence Measures. Proceedings of the Eighth ACM International Conference on Web Search and Data Mining, 399‑408. https://doi.org/10.1145/2684822.2685324
 
 [^3]: "represents some degree of trade-off between fine grained and large scale manifold features" (McInnes et al., 2018, p23).
 

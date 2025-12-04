@@ -1010,11 +1010,25 @@ Bizel-Bizellot, G., Galmiche, S., Charmet, T., Coudeville, L., Fontanet, A., & Z
 
 DiMaggio, P., Nag, M., & Blei, D. (2013). Exploiting affinities between topic modeling and the sociological perspective on culture : Application to newspaper coverage of U.S. government arts funding. Poetics, 41(6), 570‑606. https://doi.org/10.1016/j.poetic.2013.08.004
 
+Egami, N., Hinck, M., Stewart, B. M., & Wei, H. (2024). Using Large Language Model Annotations for the Social Sciences : A General Framework of Using Predicted Variables in Downstream Analyses.
+
 Grootendorst, M. (2022). BERTopic : Neural topic modeling with a class-based TF-IDF procedure (Version 1). arXiv. https://doi.org/10.48550/ARXIV.2203.05794
+
+Hoyle, A., Calvo-Bartolomé, L., Boyd-Graber, J., & Resnik, P. (2025). PROXANN: Use-Oriented Evaluations of Topic Models and Document Clustering.
 
 Jockers, M. L., & Mimno, D. (2013). Significant themes in 19th-century literature. Poetics, 41(6), 750‑769. https://doi.org/10.1016/j.poetic.2013.08.005
 
+Li, Z., Calvo-Bartolomé, L., Hoyle, A., Xu, P., Stephens, D., Dima, A., Fung, J. F., & Boyd-Graber, J. (2025). Large Language Models Struggle to Describe the Haystack without Human Help : A Social Science-Inspired Evaluation of Topic Models.
+
+Ma, L., Chen, R., Ge, W., Rogers, P., Lyn-Cook, B., Hong, H., Tong, W., Wu, N., & Zou, W. (2025). AI-powered topic modeling : Comparing LDA and BERTopic in analyzing opioid-related cardiovascular risks in women. Experimental Biology and Medicine, 250, 10389. https://doi.org/10.3389/ebm.2025.10389
+
 McInnes, L., Healy, J., & Melville, J. (2018). UMAP : Uniform Manifold Approximation and Projection for Dimension Reduction (Version 3). arXiv. https://doi.org/10.48550/ARXIV.1802.03426
+
+Ollion, E., Shen, R., Macanovic, A., & Chatelain, A. (2023). ChatGPT for Text Annotation? Mind the Hype! SocArXiv. https://doi.org/10.31235/osf.io/x58kn
+
+Ollion, E., Boelaert, J., Coavoux, S., Delaine, E., Desprès, A., Gollac, S., Keyhani, N., & Mommeja, A. (2025). La part du genre. Genre et approche intersectionnelle dans les sciences sociales françaises au XXIe siècle. https://doi.org/10.31235/osf.io/qamux_v2
+
+Shadrova, A. (2021). Topic models do not model topics : Epistemological remarks and steps towards best practices. Journal of Data Mining & Digital Humanities, 2021, 7595. https://doi.org/10.46298/jdmdh.7595
 
 Stammbach, D., Zouhar, V., Hoyle, A., Sachan, M., & Ash, E. (2023). Revisiting Automated Topic Model Evaluation with Large Language Models. Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing, 9348‑9357. https://doi.org/10.18653/v1/2023.emnlp-main.581
 
