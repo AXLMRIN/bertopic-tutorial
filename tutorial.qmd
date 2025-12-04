@@ -989,7 +989,7 @@ The first limit BERTopic faces is that it assumes that one document fits in only
 <br/>
 When comparing BERTopic with LDA, some experiments report BERTopic underperforming (Hoyle et al., 2025; Li et al., 2025) while others highlight BERTopic's capability to highlight different insightful dimensions of their corpus (Egger & Yu, 2022; Ma et al., 2025). These remarks highlight that NLP techniques and pipelines are heavily task-dependant (Egami et al., 2024; Ollion et al., 2023). These remarks further stress the point made in @sec-evaluate-your-topic-model: the only evaluation that must dictate your choice of method, model and parameters is the qualitative evaluation by experts.
 
-Topic models in general also suffer linguistic limitations (Shadrova, 2021)[^28]. From a linguistic perspective, these methods lack conceptualisation and therefore, are difficult to validate and utilise.
+Topic models in general also suffer linguistic limitations (Shadrova, 2021)[^28]. From a linguistic perspective, these methods lack conceptualisation and therefore, are difficult to validate and utilise. Other critics center around the interpretability of the results and the overall difficulty to fully validate a topic model.
 
 # Conclusion
 
