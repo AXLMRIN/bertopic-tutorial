@@ -374,7 +374,7 @@ Table&nbsp;2: HDBSCAN Parameters table
 </section>
 <section id="topic-representation-metrics" class="level1">
 <h1>Topic representation metrics</h1>
-<p>Some other metrics assess whether the representations (ie the top <span class="math inline">\(n\)</span> words) are good representations of their groups. These metrics fall into the category of Coherence metrics (Röder et al., 2015) and they rely on a reference corpus to estimate how likely words are to be found together. Multiple metrics exist such as <span class="math inline">\(C_{UCI}\)</span>, <span class="math inline">\(C_{UMass}\)</span> or <span class="math inline">\(C_V\)</span>, and differ from their formulation, but all follow the same structure depicted in <a href="#fig-coherene-framework" class="quarto-xref">Figure&nbsp;1</a>. This framework includes a “Reference Corpus” to evaluate the probability of two words appearing together. <br> These scores were often used to optimise the number of topics for LDA techniques but not to compare two topic models</p>
+<p>Some other metrics assess whether the representations (ie the top <span class="math inline">\(n\)</span> words) are good representations of their groups. These metrics fall into the category of Coherence metrics (Röder et al., 2015) and they rely on a reference corpus to estimate how likely words are to be found together. Multiple metrics exist such as <span class="math inline">\(C_{UCI}\)</span>, <span class="math inline">\(C_{UMass}\)</span> or <span class="math inline">\(C_V\)</span>, and differ from their formulation, but all follow the same structure depicted in <a href="#fig-coherene-framework" class="quarto-xref">Figure&nbsp;1</a>. This framework includes a “Reference Corpus” to evaluate the probability of two words appearing together. <br> These scores were often used to optimise the number of topics for LDA techniques but not to compare two topic models. Also, these metrics do not correlate well with experts’ opinions as explained in the <a href="./tutorial.html#quantitative-evaluation">section 5.2</a>.</p>
 <div id="fig-coherene-framework" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-coherene-framework-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -391,7 +391,7 @@ Figure&nbsp;1: “Figure 1: Overview over the unifying coherence framework&nbsp;
 <p><img src="./assets/coherence_metrics-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
 </figure>
 </div>
-<div id="fig-coherence-metrics-2" class="quarto-float quarto-figure quarto-figure-center anchored" width="100%," data-fig-align="center">
+<div id="fig-coherence-metrics-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center" width="100%,">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-coherence-metrics-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="./assets/coherence_metrics-2.png" id="fig-coherence-metrics-2" class="img-fluid quarto-figure quarto-figure-center anchored figure-img">
