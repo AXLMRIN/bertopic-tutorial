@@ -63,17 +63,29 @@ Hence, we need to find metrics that are relevant to the density-based clustering
 
 In our experience, optimising these metrics results in a sub-optimal solutions as illustrated bellow.
 
-![](./assets/clustering_metrics-1.png){height=400px, fig-align="center"}
+![](./assets/clustering_metrics-1.png){width=100%, fig-align="center"}
 
-![](./assets/clustering_metrics-2.png){height=400px, fig-align="center"}
+![](./assets/clustering_metrics-2.png){width=100%, fig-align="center"}
 
-![](./assets/clustering_metrics-3.png){height=400px, fig-align="center"}
+![](./assets/clustering_metrics-3.png){width=100%, fig-align="center"}
 
 We don't really recommend using clustering metrics to evaluate your topic model.
 
 # Topic representation metrics 
 
-Some other metrics assess whether the representations (ie the top $n$ words) are good representations of their groups. These metrics fall into the category of Coherence metrics (Röder et al., 2015) and they rely on a reference corpus to estimate how likely words are to be found together.
+Some other metrics assess whether the representations (ie the top $n$ words) are good representations of their groups. These metrics fall into the category of Coherence metrics (Röder et al., 2015) and they rely on a reference corpus to estimate how likely words are to be found together. Multiple metrics exist such as $C_{UCI}$, $C_{UMass}$ or $C_V$, and differ from their formulation, but all follow the same structure depicted in @fig-coherene-framework. This framework includes a "Reference Corpus" to evaluate the probability of two words appearing together. 
+<br/>
+These scores were often used to optimise the number of topics for LDA techniques but not to compare two topic models 
+
+!["Figure 1: Overview over the unifying coherence framework — its four parts and their intermediate results." (Röder et al., 2015)](./assets/coherence_metrics.png){#fig-coherene-framework width=100%, fig-align="center"}
+
+If you wanted to implement them, an easy way around is to use the [Gensim](https://radimrehurek.com/gensim/auto_examples/index.html#documentation) library and the [CoherenceModel](https://radimrehurek.com/gensim/models/coherencemodel.html) object. For reference, we provide some examples of topic models and evaluation, we have not qualitatively evaluated these topic models, apart from @fig-coherence-metrics-2 which is presented in [Section 4.2](./tutorial.qmd#tune-parameters).
+
+![](./assets/coherence_metrics-1.png){width=100%, fig-align="center"}
+
+![](./assets/coherence_metrics-2.png){#fig-coherence-metrics-2 width=100%, fig-align="center"}
+
+![](./assets/coherence_metrics-3.png){width=100%, fig-align="center"}
 
 # Bibliography
 
